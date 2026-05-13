@@ -45,11 +45,6 @@
 - 📊 **Statistics** - Liczba linii, znaków, błędów i ostrzeżeń
 - 🔗 **Share via URL** - Udostępnianie kodu przez link
 
-## 🚀 Quick Start
-
-### Docker (recommended)
-
-```bash
 # Clone the repository
 git clone https://github.com/wronai/pactown-debug.git
 cd pactown-debug
@@ -64,9 +59,6 @@ docker run -p 8081:8081 pactown-debug
 
 Open http://localhost:8081 in your browser.
 
-### Without Docker
-
-```bash
 # Requirements: Python 3.10+ and ShellCheck
 sudo apt-get install shellcheck  # Ubuntu/Debian
 brew install shellcheck           # macOS
@@ -84,8 +76,6 @@ python3 server.py
 2. **Automatic analysis** - Errors are detected in real-time
 3. **View fixes** - Right panel shows corrected code with explanations
 4. **Export** - Download or copy the fixed script
-
-## 📚 Examples
 
 ### Bash Script Analysis
 
@@ -209,8 +199,6 @@ Pactown Live Debug supports 24+ languages and formats:
 | **INI** | ✅ Full | `key=value` |
 | **And more...** | 🚧 In Progress | PHP, Go, Rust, Java |
 
-## 🐛 Detected Issues
-
 ### Bash/Shell
 | Code | Description | Example |
 |------|-------------|---------|
@@ -236,8 +224,6 @@ Pactown Live Debug supports 24+ languages and formats:
 | DF002 | Multiple RUN instructions | `RUN apt-get update`\n`RUN apt-get install` |
 | DF003 | Missing cache cleanup | `RUN apt-get update` |
 | DF004 | Use shell form of CMD | `CMD python app.py` |
-
-## 📡 API Reference
 
 ### POST /api/analyze
 
@@ -330,9 +316,6 @@ The project includes the `pactfix` CLI tool for analyzing and auto-fixing code i
 - **Automated testing** (`--test`) - Run tests in sandbox
 - **Multi-language support** - Bash, Python, Go, Node.js, Dockerfile, and more
 
-### Usage Examples
-
-```bash
 # Analyze and fix entire project
 pactfix --path ./my-project
 
@@ -357,9 +340,6 @@ pactfix --list-languages
 The project includes test projects in `pactfix-py/test-projects/`:
 
 ```bash
-# Run sandbox tests
-make test-sandbox
-
 # Run with in-container tests
 make test-sandbox-tests
 ```
@@ -393,26 +373,6 @@ pactown-debug/
 └── README.md             # This file
 ```
 
-## 🧪 Testing
-
-### Running Tests
-
-```bash
-# Run all tests
-make test
-
-# Backend tests
-make test-backend
-
-# Pactfix CLI tests
-make test-pactfix
-
-# E2E tests
-make test-frontend
-
-# Sandbox tests
-make test-sandbox
-
 # Sandbox with in-container tests
 make test-sandbox-tests
 ```
@@ -423,8 +383,6 @@ make test-sandbox-tests
 - **Pactfix CLI**: 202 tests covering all analyzers
 - **E2E**: 41 tests covering UI interactions
 - **Sandbox**: Multiple real-world project scenarios
-
-## 🚀 Development
 
 ### Tech Stack
 
@@ -485,9 +443,6 @@ We welcome contributions! Here's how to get started:
    - Link any relevant issues
    - Ensure CI passes
 
-### Development Setup
-
-```bash
 # Clone the repo
 git clone https://github.com/wronai/pactown-debug.git
 cd pactown-debug
@@ -497,9 +452,6 @@ pip install -e pactfix-py[dev]
 
 # Install playwright browsers
 npx playwright install
-
-# Run development server
-python3 server.py
 
 # Run tests in watch mode
 make test-frontend  # E2E tests
@@ -526,3 +478,20 @@ Built with ❤️ by the [Pactown](https://pactown.dev) team
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/wronai/pactown-debug.svg)](https://github.com/wronai/pactown-debug/pulls)
 
 </div>
+
+<!-- taskill:status:start -->
+
+## Status
+
+_Last updated by [taskill](https://github.com/oqlos/taskill) at 2026-04-25 13:41 UTC_
+
+| Metric | Value |
+|---|---|
+| HEAD | `5b97217` |
+| Coverage | — |
+| Failing tests | — |
+| Commits in last cycle | 50 |
+
+> A series of release commits plus targeted refactors and docs updates. Notable changes include core architecture cleanup, a new DSL refactor, documentation updates for the changelog (v1.2.0), and addition of code-quality metrics split into six supporting modules.
+
+<!-- taskill:status:end -->

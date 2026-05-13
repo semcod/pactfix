@@ -27,14 +27,6 @@ pip install pactfix
 
 Requires Python 3.10+
 
-## 📖 Basic Usage
-
-### Fix a Single File
-
-```bash
-# Analyze only
-pactfix script.sh
-
 # Fix and save to new file
 pactfix script.sh -o fixed.sh
 
@@ -42,9 +34,6 @@ pactfix script.sh -o fixed.sh
 pactfix script.sh --comment -o fixed.sh
 ```
 
-### Fix Entire Projects
-
-```bash
 # Fix all files in place with comments
 pactfix --path ./my-project --comment
 
@@ -52,9 +41,6 @@ pactfix --path ./my-project --comment
 pactfix --path ./my-project
 ```
 
-### Docker Sandbox Testing
-
-```bash
 # Test fixes in Docker container
 pactfix --path ./my-project --sandbox
 
@@ -62,11 +48,6 @@ pactfix --path ./my-project --sandbox
 pactfix --path ./my-project --sandbox --test
 ```
 
-## 🔧 Language Examples
-
-### Bash/Shell
-
-```bash
 # Input
 echo "$(ssh user@host cmd") >> file
 
@@ -74,9 +55,6 @@ echo "$(ssh user@host cmd") >> file
 echo "$(ssh user@host cmd)" >> file  # ✅ Fixed quote position
 ```
 
-### Python
-
-```python
 # Input
 def func(items=[]):
     print "hello"
@@ -88,9 +66,6 @@ def func(items=None):  # ✅ Avoid mutable defaults
     print("hello")  # ✅ Use print() function
 ```
 
-### Dockerfile
-
-```dockerfile
 # Input
 FROM ubuntu:latest
 RUN apt-get update
@@ -101,9 +76,6 @@ FROM ubuntu:22.04  # ✅ Use specific version
 RUN apt-get update && apt-get install -y python3 && rm -rf /var/lib/apt/lists/*  # ✅ Combine & cleanup
 ```
 
-### Docker Compose
-
-```yaml
 # Input
 services:
   web:
@@ -117,9 +89,6 @@ services:
     # privileged: true  # ✅ Removed for security
 ```
 
-### Kubernetes
-
-```yaml
 # Input
 apiVersion: apps/v1
 kind: Deployment
@@ -145,9 +114,6 @@ spec:
             memory: 512Mi
 ```
 
-### Terraform
-
-```hcl
 # Input
 resource "aws_instance" "example" {
   ami           = "ami-12345678"
@@ -187,8 +153,6 @@ variable "access_key" {
 | **Ansible** | ✅ Full | Best practices |
 | **And 10+ more** | 🚧 In Progress | Various config formats |
 
-## 📊 CI/CD Integration
-
 ### GitHub Actions
 
 ```yaml
@@ -204,9 +168,6 @@ variable "access_key" {
     path: pactfix-report.json
 ```
 
-### Pre-commit Hook
-
-```yaml
 # .pre-commit-config.yaml
 repos:
   - repo: local
@@ -219,9 +180,6 @@ repos:
         types: [text]
 ```
 
-## 🛠️ Advanced Options
-
-```bash
 # Force specific language
 pactfix script.py -l python
 
@@ -240,8 +198,6 @@ pactfix --init-dockerfiles ./dockerfiles/
 # List all supported languages
 pactfix --list-languages
 ```
-
-## 📝 Output Formats
 
 ### Console Output
 
@@ -283,9 +239,6 @@ pactfix --list-languages
 Pactfix includes comprehensive tests:
 
 ```bash
-# Run all tests
-pytest
-
 # Run specific language tests
 pytest tests/test_bash.py
 

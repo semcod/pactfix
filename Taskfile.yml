@@ -1,0 +1,190 @@
+version: '1'
+name: pactown-debug
+description: Minimal Taskfile
+variables:
+  APP_NAME: pactown-debug
+environments:
+  local:
+    container_runtime: docker
+    compose_command: docker compose
+pipeline:
+  python_version: "3.12"
+  runner_image: ubuntu-latest
+  branches: [main]
+  cache: [~/.cache/pip]
+  artifacts: [dist/]
+
+  stages:
+    - name: lint
+      tasks: [lint]
+
+    - name: test
+      tasks: [test]
+
+    - name: build
+      tasks: [build]
+      when: "branch:main"
+
+tasks:
+  install:
+    desc: Install npm dependencies
+    cmds:
+    - npm install
+  test:
+    desc: 'Run npm script: test'
+    cmds:
+    - npm run test
+  up:
+    desc: Start services via docker compose
+    cmds:
+    - docker compose up -d
+  down:
+    desc: Stop services
+    cmds:
+    - docker compose down
+  logs:
+    desc: Tail compose logs
+    cmds:
+    - docker compose logs -f
+  ps:
+    desc: Show running compose services
+    cmds:
+    - docker compose ps
+  docker-build:
+    desc: Build docker image
+    cmds:
+    - docker build -t pactown-debug:latest .
+  help:
+    desc: '[imported from Makefile] help'
+    cmds:
+    - echo "Targets:"
+    - echo "  make test           - run all tests (frontend e2e + pactfix-py)"
+    - echo "  make test-frontend  - run Playwright e2e tests"
+    - echo "  make test-pactfix   - run pactfix-py pytest suite"
+    - echo "  make test-sandbox   - run pactfix sandbox smoke test on all test-projects"
+    - echo "  make test-sandbox-tests - run sandbox smoke test + run in-container
+      test commands (--test)"
+    - echo "  make test-backend   - basic python syntax check for server.py"
+    - echo "  make publish        - build + upload python package pactfix (requires
+      twine credentials)"
+    - echo "  make push           - git add . + commit + push to remote"
+    - echo "  make build          - build Docker image for pactown-debug"
+    - echo "  make run            - run Docker container (builds if needed)"
+    - echo "  make stop           - stop and remove running container"
+    - echo "  make clean          - remove python build/test artifacts and Docker
+      containers"
+    - echo "  make down           - stop and remove containers (alias for clean)"
+  test-frontend:
+    desc: '[imported from Makefile] test-frontend'
+    cmds:
+    - npm test
+  test-backend:
+    desc: '[imported from Makefile] test-backend'
+    cmds:
+    - python3 -m py_compile server.py
+    - python3 -m unittest discover -s tests -q
+  test-pactfix:
+    desc: '[imported from Makefile] test-pactfix'
+    cmds:
+    - cd $(PACTFIX_DIR) && python -c "import pytest" >/dev/null 2>&1 || python -m
+      pip install -q -e ".[dev]"
+    - cd $(PACTFIX_DIR) && python -m pytest -q
+  test-sandbox:
+    desc: '[imported from Makefile] test-sandbox'
+    cmds:
+    - cd $(PACTFIX_DIR) && ./scripts/test-sandboxes.sh
+  test-sandbox-tests:
+    desc: '[imported from Makefile] test-sandbox-tests'
+    cmds:
+    - cd $(PACTFIX_DIR) && ./scripts/test-sandboxes.sh --test
+  build-pactfix:
+    desc: '[imported from Makefile] build-pactfix'
+    cmds:
+    - cd $(PACTFIX_DIR) && python -m pip install -q --upgrade build twine
+    - cd $(PACTFIX_DIR) && python -m build --sdist --wheel
+  bump-patch:
+    desc: '[imported from Makefile] bump-patch'
+    cmds:
+    - python -c 'from pathlib import Path; import re; pyproject = Path("$(PACTFIX_DIR)")
+      / "pyproject.toml"; content = pyproject.read_text(encoding="utf-8"); pattern
+      = re.compile(r"^(version\s*=\s*\")(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)(\")",
+      re.MULTILINE); match = pattern.search(content); assert match, "Could not find
+      version in pyproject.toml"; major = int(match.group("major")); minor = int(match.group("minor"));
+      patch = int(match.group("patch")) + 1; new_version = f"{major}.{minor}.{patch}";
+      updated = pattern.sub(rf"\g<1>{new_version}\g<5>", content, count=1); pyproject.write_text(updated,
+      encoding="utf-8"); print(f"Bumped pactfix version to {new_version}")'
+  publish:
+    desc: '[imported from Makefile] publish'
+    cmds:
+    - cd $(PACTFIX_DIR) && python -m twine upload dist/*
+    deps:
+    - bump-patch
+    - build-pactfix
+  push:
+    desc: '[imported from Makefile] push'
+    cmds:
+    - goal push
+  build:
+    desc: '[imported from Makefile] build'
+    cmds:
+    - docker build -t pactown-debug .
+  run:
+    desc: '[imported from Makefile] run'
+    cmds:
+    - if ! docker ps -q -f name=pactown-debug | grep -q .; then \
+    - docker run -d --name pactown-debug -p $(PORT):8080 --env-file .env --rm pactown-debug;
+      \
+    - 'echo "Container started: http://localhost:$(PORT)"; \'
+    - else \
+    - 'echo "Container already running: http://localhost:$(PORT)"; \'
+    - fi
+    deps:
+    - build
+  stop:
+    desc: '[imported from Makefile] stop'
+    cmds:
+    - if docker ps -q -f name=pactown-debug | grep -q .; then \
+    - docker stop pactown-debug; \
+    - echo "Container stopped."; \
+    - else \
+    - echo "Container not running."; \
+    - fi
+  clean:
+    desc: '[imported from Makefile] clean'
+    cmds:
+    - if docker images -q pactown-debug | grep -q .; then \
+    - docker rmi pactown-debug; \
+    - echo "Image removed."; \
+    - else \
+    - echo "Image not found."; \
+    - fi
+    - rm -rf dist build .pytest_cache test-results \
+    - $(PACTFIX_DIR)/.pytest_cache $(PACTFIX_DIR)/dist $(PACTFIX_DIR)/build $(PACTFIX_DIR)/*.egg-info
+    deps:
+    - stop
+  lint:
+    desc: '[from doql] workflow: lint'
+    cmds:
+    - ruff check .
+  fmt:
+    desc: '[from doql] workflow: fmt'
+    cmds:
+    - ruff format .
+  health:
+    desc: '[from doql] workflow: health'
+    cmds:
+    - docker compose ps
+  all:
+    desc: Run install, lint, test
+    cmds:
+    - taskfile run install
+    - taskfile run lint
+    - taskfile run test
+  format:
+    desc: Auto-format with ruff (alias of fmt)
+    cmds:
+    - ruff format .
+  import-makefile-hint:
+    desc: '[from doql] workflow: import-makefile-hint'
+    cmds:
+    - 'echo ''Run: taskfile import Makefile to import existing targets.'''

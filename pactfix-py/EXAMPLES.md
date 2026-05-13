@@ -2,8 +2,6 @@
 
 This document provides detailed examples of using Pactfix to auto-fix security issues and apply best practices.
 
-## Docker Compose Examples
-
 ### Basic Security Hardening
 
 Input file `docker-compose.yml`:
@@ -46,9 +44,6 @@ services:
 networks:
   default:
     driver: bridge
-# pactfix: Dodano sieć domyślną
-```
-
 ### Multi-Service Setup
 
 For a complete multi-service application, Pactfix will:
@@ -57,8 +52,6 @@ For a complete multi-service application, Pactfix will:
 - Remove privileged containers
 - Add networks block
 - Flag hardcoded secrets
-
-## Kubernetes Examples
 
 ### Deployment Security
 
@@ -135,8 +128,6 @@ spec:
         runAsUser: 1000
         fsGroup: 2000
 ```
-
-## Terraform Examples
 
 ### Infrastructure Security
 
@@ -253,8 +244,6 @@ variable "project_name" {
 }
 ```
 
-## CI/CD Integration
-
 ### GitHub Actions
 
 ```yaml
@@ -310,8 +299,6 @@ security:
     - main
 ```
 
-## Best Practices
-
 ### 1. Always Review Changes
 
 Auto-fixes are suggestions. Always review the changes:
@@ -366,8 +353,6 @@ def analyze_custom(code: str) -> AnalysisResult:
     # Add custom detection logic
     return AnalysisResult('custom', code, code, errors, [], [])
 ```
-
-## Troubleshooting
 
 ### Common Issues
 

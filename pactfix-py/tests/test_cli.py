@@ -16,7 +16,9 @@ def _run_cli(args, cwd, env=None):
         merged_env.update(env)
 
     cmd = [sys.executable, "-m", "pactfix"] + args
-    proc = subprocess.run(cmd, cwd=str(cwd), env=merged_env, capture_output=True, text=True)
+    proc = subprocess.run(
+        cmd, cwd=str(cwd), env=merged_env, capture_output=True, text=True
+    )
     return proc
 
 
@@ -36,7 +38,9 @@ def test_cli_fix_all_uses_env_examples_dir(tmp_path):
     # Create fake examples structure
     examples = tmp_path / "examples"
     (examples / "bash").mkdir(parents=True)
-    (examples / "bash" / "faulty.sh").write_text("#!/bin/bash\ncd /tmp", encoding="utf-8")
+    (examples / "bash" / "faulty.sh").write_text(
+        "#!/bin/bash\ncd /tmp", encoding="utf-8"
+    )
 
     env = {"PACTFIX_EXAMPLES_DIR": str(examples)}
     proc = _run_cli(["--fix-all"], cwd=Path(__file__).resolve().parents[1], env=env)
@@ -57,7 +61,10 @@ def test_cli_comment_inserts_comment_into_output_file(tmp_path):
     sample.write_text("cd /tmp\n", encoding="utf-8")
 
     out = tmp_path / "out.sh"
-    proc = _run_cli([str(sample), "-o", str(out), "--comment"], cwd=Path(__file__).resolve().parents[1])
+    proc = _run_cli(
+        [str(sample), "-o", str(out), "--comment"],
+        cwd=Path(__file__).resolve().parents[1],
+    )
     assert proc.returncode == 0
 
     text = out.read_text(encoding="utf-8")

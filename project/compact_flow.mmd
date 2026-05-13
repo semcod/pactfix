@@ -1,0 +1,8 @@
+flowchart TD
+    pactfix_py__pactfix["pactfix-py.pactfix<br/>75 funcs"]
+    pactown_js__src["pactown-js.src<br/>19 funcs"]
+    server["server<br/>31 funcs"]
+    server__DebugHandler["server.DebugHandler<br/>6 funcs"]
+    pactfix_py__pactfix ==>|13| server
+    server__DebugHandler ==>|6| server
+    pactfix_py__pactfix -->|1| pactown_js__src

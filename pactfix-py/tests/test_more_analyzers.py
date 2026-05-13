@@ -18,7 +18,7 @@ services:
     privileged: true
 """
         )
-        assert any(e.code == 'COMPOSE002' for e in result.errors)
+        assert any(e.code == "COMPOSE002" for e in result.errors)
 
     def test_detect_hardcoded_secret(self):
         result = analyze_docker_compose(
@@ -29,8 +29,8 @@ services:
       - DATABASE_PASSWORD=secret
 """
         )
-        assert any(w.code == 'COMPOSE001' for w in result.warnings)
-        assert any(e.code == 'COMPOSE005' for e in result.errors)
+        assert any(w.code == "COMPOSE001" for w in result.warnings)
+        assert any(e.code == "COMPOSE005" for e in result.errors)
 
 
 class TestNginxAnalysis:
@@ -42,8 +42,8 @@ class TestNginxAnalysis:
 }
 """
         )
-        assert any(w.code == 'NGINX001' for w in result.warnings)
-        assert 'server_tokens off' in result.fixed_code
+        assert any(w.code == "NGINX001" for w in result.warnings)
+        assert "server_tokens off" in result.fixed_code
 
     def test_weak_ssl_protocols(self):
         result = analyze_nginx(
@@ -54,7 +54,7 @@ class TestNginxAnalysis:
 }
 """
         )
-        assert any(e.code == 'NGINX003' for e in result.errors)
+        assert any(e.code == "NGINX003" for e in result.errors)
 
 
 class TestGithubActionsAnalysis:
@@ -71,8 +71,8 @@ jobs:
       - uses: actions/checkout@master
 """
         )
-        assert any(w.code == 'GHA001' for w in result.warnings)
-        assert '@v4' in result.fixed_code
+        assert any(w.code == "GHA001" for w in result.warnings)
+        assert "@v4" in result.fixed_code
 
     def test_hardcoded_secret(self):
         result = analyze_github_actions(
@@ -88,7 +88,7 @@ jobs:
         run: echo "token: abc123"
 """
         )
-        assert any(e.code == 'GHA003' for e in result.errors)
+        assert any(e.code == "GHA003" for e in result.errors)
 
 
 class TestAnsibleAnalysis:
@@ -101,7 +101,7 @@ class TestAnsibleAnalysis:
         password: "mypassword"
 """
         )
-        assert any(e.code == 'ANS001' for e in result.errors)
+        assert any(e.code == "ANS001" for e in result.errors)
 
     def test_ignore_errors_warning(self):
         result = analyze_ansible(
@@ -111,4 +111,4 @@ class TestAnsibleAnalysis:
       ignore_errors: true
 """
         )
-        assert any(w.code == 'ANS004' for w in result.warnings)
+        assert any(w.code == "ANS004" for w in result.warnings)

@@ -1,18 +1,8 @@
-# Pactfix Quick Reference
-
 ## Installation
 
 ```bash
 pip install -e .
 ```
-
-## Basic Commands
-
-### Analyze Files
-
-```bash
-# Single file
-pactfix file.py
 
 # With language specified
 pactfix config.yaml -l kubernetes
@@ -24,9 +14,6 @@ pactfix --batch ./configs
 pactfix file.py -v
 ```
 
-### Fix Files
-
-```bash
 # In-place with comments
 pactfix --path ./project --comment
 
@@ -37,17 +24,12 @@ pactfix input.yaml -o output.yaml
 pactfix input.yaml -o output.yaml --comment
 ```
 
-### Sandbox Mode
-
-```bash
 # Create sandbox with fixes
 pactfix --path ./project --sandbox
 
 # With tests
 pactfix --path ./project --sandbox --test
 ```
-
-## Language-Specific Options
 
 ### Docker Compose
 
@@ -87,8 +69,6 @@ Fixes:
 - Change public S3 ACLs to private
 - Add resource tags
 - Add version constraints
-
-## Output Formats
 
 ### Default Output
 
@@ -133,8 +113,6 @@ pactfix file.py --json
 - `0` - Success (no errors)
 - `1` - Errors found
 
-## CI/CD Integration
-
 ### GitHub Actions
 
 ```yaml
@@ -161,9 +139,6 @@ security:
 4. **Combine with git** - Commit fixes separately
 5. **Use in CI** - Prevent issues from reaching production
 
-## Quick Examples
-
-```bash
 # Quick security scan
 pactfix --batch . -v
 

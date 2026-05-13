@@ -1,0 +1,230 @@
+# vallm batch | 249f | 136✓ 28⚠ 24✗ | 2026-04-08
+
+SUMMARY:
+  scanned: 249  passed: 136 (54.6%)  warnings: 28  errors: 24  unsupported: 89
+
+WARNINGS[28]{path,score}:
+  pactfix-py/pactfix/cli.py,0.83
+    issues[10]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,process_file has cyclomatic complexity 19 (max: 15),79
+      complexity.cyclomatic,warning,process_stdin has cyclomatic complexity 19 (max: 15),154
+      complexity.cyclomatic,warning,fix_all_examples has cyclomatic complexity 21 (max: 15),279
+      complexity.cyclomatic,warning,process_project has cyclomatic complexity 37 (max: 15),419
+      complexity.maintainability,warning,Low maintainability index: 19.1 (threshold: 20),
+      complexity.lizard_cc,warning,process_file: CC=19 exceeds limit 15,79
+      complexity.lizard_cc,warning,process_stdin: CC=19 exceeds limit 15,154
+      complexity.lizard_cc,warning,fix_all_examples: CC=21 exceeds limit 15,279
+      complexity.lizard_cc,warning,process_project: CC=37 exceeds limit 15,419
+      complexity.lizard_length,warning,process_project: 159 lines exceeds limit 100,419
+  pactfix-py/pactfix/analyzer.py,0.90
+    issues[6]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,detect_language has cyclomatic complexity 119 (max: 15),115
+      complexity.cyclomatic,warning,_apply_edits_to_lines has cyclomatic complexity 16 (max: 15),362
+      complexity.maintainability,warning,Low maintainability index: 18.3 (threshold: 20),
+      complexity.lizard_cc,warning,detect_language: CC=119 exceeds limit 15,115
+      complexity.lizard_length,warning,detect_language: 107 lines exceeds limit 100,115
+      complexity.lizard_cc,warning,_apply_edits_to_lines: CC=16 exceeds limit 15,362
+  pactfix-py/pactfix/analyzers/kubernetes.py,0.90
+    issues[5]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,analyze_kubernetes has cyclomatic complexity 61 (max: 15),12
+      complexity.cyclomatic,warning,_find_container_key_line_by_index has cyclomatic complexity 19 (max: 15),221
+      complexity.lizard_cc,warning,analyze_kubernetes: CC=61 exceeds limit 15,12
+      complexity.lizard_length,warning,analyze_kubernetes: 161 lines exceeds limit 100,12
+      complexity.lizard_cc,warning,_find_container_key_line_by_index: CC=19 exceeds limit 15,221
+  pactfix-py/pactfix/analyzers/apache.py,0.93
+    issues[3]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,analyze_apache has cyclomatic complexity 63 (max: 15),8
+      complexity.lizard_cc,warning,analyze_apache: CC=63 exceeds limit 15,8
+      complexity.lizard_length,warning,analyze_apache: 142 lines exceeds limit 100,8
+  pactfix-py/pactfix/analyzers/docker_compose.py,0.93
+    issues[3]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,analyze_docker_compose has cyclomatic complexity 52 (max: 15),12
+      complexity.lizard_cc,warning,analyze_docker_compose: CC=52 exceeds limit 15,12
+      complexity.lizard_length,warning,analyze_docker_compose: 108 lines exceeds limit 100,12
+  pactfix-py/pactfix/analyzers/html.py,0.93
+    issues[3]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,analyze_html has cyclomatic complexity 60 (max: 15),8
+      complexity.lizard_cc,warning,analyze_html: CC=60 exceeds limit 15,8
+      complexity.lizard_length,warning,analyze_html: 114 lines exceeds limit 100,8
+  pactfix-py/pactfix/analyzers/markpact.py,0.93
+    issues[4]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,_resolve_language has cyclomatic complexity 29 (max: 15),49
+      complexity.cyclomatic,warning,analyze_markpact has cyclomatic complexity 23 (max: 15),113
+      complexity.lizard_cc,warning,_resolve_language: CC=29 exceeds limit 15,49
+      complexity.lizard_cc,warning,analyze_markpact: CC=23 exceeds limit 15,113
+  pactfix-py/pactfix/analyzers/nginx.py,0.93
+    issues[3]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,analyze_nginx has cyclomatic complexity 53 (max: 15),7
+      complexity.lizard_cc,warning,analyze_nginx: CC=53 exceeds limit 15,7
+      complexity.lizard_length,warning,analyze_nginx: 129 lines exceeds limit 100,7
+  pactfix-py/pactfix/analyzers/python_lang.py,0.93
+    issues[3]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,analyze_python has cyclomatic complexity 57 (max: 15),30
+      complexity.lizard_cc,warning,analyze_python: CC=57 exceeds limit 15,30
+      complexity.lizard_length,warning,analyze_python: 188 lines exceeds limit 100,30
+  pactfix-py/pactfix/analyzers/systemd.py,0.93
+    issues[3]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,analyze_systemd has cyclomatic complexity 47 (max: 15),8
+      complexity.lizard_cc,warning,analyze_systemd: CC=47 exceeds limit 15,8
+      complexity.lizard_length,warning,analyze_systemd: 109 lines exceeds limit 100,8
+  pactfix-py/pactfix/analyzers/terraform.py,0.93
+    issues[3]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,analyze_terraform has cyclomatic complexity 49 (max: 15),7
+      complexity.lizard_cc,warning,analyze_terraform: CC=48 exceeds limit 15,7
+      complexity.lizard_length,warning,analyze_terraform: 142 lines exceeds limit 100,7
+  pactfix-py/pactfix/sandbox.py,0.93
+    issues[3]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,detect_project_language has cyclomatic complexity 17 (max: 15),164
+      complexity.lizard_cc,warning,detect_project_language: CC=17 exceeds limit 15,164
+      complexity.lizard_length,warning,detect_project_language: 118 lines exceeds limit 100,164
+  pactfix-py/scripts/test-sandboxes.sh,0.93
+    issues[2]{rule,severity,message,line}:
+      complexity.lizard_cc,warning,test_project: CC=27 exceeds limit 15,46
+      complexity.lizard_length,warning,test_project: 102 lines exceeds limit 100,46
+  pactfix-py/pactfix/analyzers/bash.py,0.97
+    issues[2]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,_brace_unbraced_bash_vars has cyclomatic complexity 16 (max: 15),7
+      complexity.lizard_cc,warning,_brace_unbraced_bash_vars: CC=16 exceeds limit 15,7
+  pactfix-py/pactfix/analyzers/csharp.py,0.97
+    issues[2]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,analyze_csharp has cyclomatic complexity 41 (max: 15),8
+      complexity.lizard_cc,warning,analyze_csharp: CC=41 exceeds limit 15,8
+  pactfix-py/pactfix/analyzers/css.py,0.97
+    issues[2]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,analyze_css has cyclomatic complexity 33 (max: 15),8
+      complexity.lizard_cc,warning,analyze_css: CC=33 exceeds limit 15,8
+  pactfix-py/pactfix/analyzers/dockerfile.py,0.97
+    issues[2]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,analyze_dockerfile has cyclomatic complexity 30 (max: 15),7
+      complexity.lizard_cc,warning,analyze_dockerfile: CC=30 exceeds limit 15,7
+  pactfix-py/pactfix/analyzers/gitlab_ci.py,0.97
+    issues[2]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,analyze_gitlab_ci has cyclomatic complexity 18 (max: 15),7
+      complexity.lizard_cc,warning,analyze_gitlab_ci: CC=18 exceeds limit 15,7
+  pactfix-py/pactfix/analyzers/go.py,0.97
+    issues[2]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,analyze_go has cyclomatic complexity 37 (max: 15),8
+      complexity.lizard_cc,warning,analyze_go: CC=37 exceeds limit 15,8
+  pactfix-py/pactfix/analyzers/helm.py,0.97
+    issues[2]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,analyze_helm has cyclomatic complexity 34 (max: 15),7
+      complexity.lizard_cc,warning,analyze_helm: CC=34 exceeds limit 15,7
+  pactfix-py/pactfix/analyzers/java.py,0.97
+    issues[2]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,analyze_java has cyclomatic complexity 39 (max: 15),8
+      complexity.lizard_cc,warning,analyze_java: CC=39 exceeds limit 15,8
+  pactfix-py/pactfix/analyzers/jenkinsfile.py,0.97
+    issues[2]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,analyze_jenkinsfile has cyclomatic complexity 19 (max: 15),7
+      complexity.lizard_cc,warning,analyze_jenkinsfile: CC=19 exceeds limit 15,7
+  pactfix-py/pactfix/analyzers/makefile.py,0.97
+    issues[2]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,analyze_makefile has cyclomatic complexity 44 (max: 15),8
+      complexity.lizard_cc,warning,analyze_makefile: CC=44 exceeds limit 15,8
+  pactfix-py/pactfix/analyzers/ruby.py,0.97
+    issues[2]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,analyze_ruby has cyclomatic complexity 28 (max: 15),8
+      complexity.lizard_cc,warning,analyze_ruby: CC=28 exceeds limit 15,8
+  pactfix-py/pactfix/analyzers/rust.py,0.97
+    issues[2]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,analyze_rust has cyclomatic complexity 32 (max: 15),8
+      complexity.lizard_cc,warning,analyze_rust: CC=32 exceeds limit 15,8
+  pactfix-py/pactfix/analyzers/sql.py,0.97
+    issues[2]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,analyze_sql has cyclomatic complexity 19 (max: 15),7
+      complexity.lizard_cc,warning,analyze_sql: CC=19 exceeds limit 15,7
+  pactfix-py/pactfix/analyzers/typescript.py,0.97
+    issues[2]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,analyze_typescript has cyclomatic complexity 31 (max: 15),8
+      complexity.lizard_cc,warning,analyze_typescript: CC=31 exceeds limit 15,8
+  pactfix-py/pactfix/analyzers/yaml_generic.py,0.97
+    issues[2]{rule,severity,message,line}:
+      complexity.cyclomatic,warning,analyze_yaml has cyclomatic complexity 43 (max: 15),8
+      complexity.lizard_cc,warning,analyze_yaml: CC=43 exceeds limit 15,8
+
+ERRORS[24]{path,score}:
+  examples/bash/faulty.sh,0.00
+    issues[1]{rule,severity,message,line}:
+      syntax.tree_sitter,error,tree-sitter found 1 parse error(s) in bash,
+  examples/bash/fixed/fixed_faulty.sh,0.00
+    issues[1]{rule,severity,message,line}:
+      syntax.tree_sitter,error,tree-sitter found 1 parse error(s) in bash,
+  examples/php/faulty.php,0.00
+    issues[1]{rule,severity,message,line}:
+      syntax.tree_sitter,error,tree-sitter found 6 parse error(s) in php,
+  examples/php/fixed.php,0.00
+    issues[1]{rule,severity,message,line}:
+      syntax.tree_sitter,error,tree-sitter found 6 parse error(s) in php,
+  examples/php/fixed/fixed_faulty.php,0.00
+    issues[1]{rule,severity,message,line}:
+      syntax.tree_sitter,error,tree-sitter found 6 parse error(s) in php,
+  examples/php/fixed/fixed_fixed.php,0.00
+    issues[1]{rule,severity,message,line}:
+      syntax.tree_sitter,error,tree-sitter found 6 parse error(s) in php,
+  examples/python/faulty.py,0.00
+    issues[1]{rule,severity,message,line}:
+      syntax.parse,error,SyntaxError: Missing parentheses in call to 'print'. Did you mean print(...)?,9
+  examples/sql/faulty.sql,0.00
+    issues[1]{rule,severity,message,line}:
+      syntax.tree_sitter,error,tree-sitter found 4 parse error(s) in sql,
+  examples/sql/fixed/fixed_faulty.sql,0.00
+    issues[1]{rule,severity,message,line}:
+      syntax.tree_sitter,error,tree-sitter found 5 parse error(s) in sql,
+  pactfix-py/dockerfiles/Dockerfile.go,0.00
+    issues[1]{rule,severity,message,line}:
+      syntax.tree_sitter,error,tree-sitter found 9 parse error(s) in go,
+  pactfix-py/dockerfiles/Dockerfile.java,0.00
+    issues[1]{rule,severity,message,line}:
+      syntax.tree_sitter,error,tree-sitter found 23 parse error(s) in java,
+  pactfix-py/test-projects/json-project/_fixtures/faulty/config.json,0.00
+    issues[1]{rule,severity,message,line}:
+      syntax.tree_sitter,error,tree-sitter found 3 parse error(s) in json,
+  pactfix-py/tests/fixtures/json/errors.json,0.00
+    issues[1]{rule,severity,message,line}:
+      syntax.tree_sitter,error,tree-sitter found 6 parse error(s) in json,
+  pactfix-py/tests/fixtures/php/errors.php,0.00
+    issues[1]{rule,severity,message,line}:
+      syntax.tree_sitter,error,tree-sitter found 1 parse error(s) in php,
+  pactfix-py/tests/fixtures/sql/errors.sql,0.00
+    issues[1]{rule,severity,message,line}:
+      syntax.tree_sitter,error,tree-sitter found 8 parse error(s) in sql,
+  pactfix-py/tests/fixtures/toml/errors.toml,0.00
+    issues[1]{rule,severity,message,line}:
+      syntax.tree_sitter,error,tree-sitter found 1 parse error(s) in toml,
+  pactfix-py/tests/fixtures/yaml/errors.yaml,0.00
+    issues[1]{rule,severity,message,line}:
+      syntax.tree_sitter,error,tree-sitter found 1 parse error(s) in yaml,
+  pactfix-py/test-projects/python-project/_fixtures/faulty/test_main.py,0.57
+    issues[2]{rule,severity,message,line}:
+      python.import.resolvable,error,Module 'main' not found,2
+      python.import.resolvable,error,Module 'main' not found,10
+  pactfix-py/test-projects/python-project/test_main.py,0.57
+    issues[2]{rule,severity,message,line}:
+      python.import.resolvable,error,Module 'main' not found,2
+      python.import.resolvable,error,Module 'main' not found,10
+  pactfix-py/tests/test_more_analyzers.py,0.57
+    issues[1]{rule,severity,message,line}:
+      python.import.resolvable,error,Module 'pactfix.analyzer' not found,3
+  pactfix-py/pactfix/server.py,0.71
+    issues[2]{rule,severity,message,line}:
+      python.import.resolvable,error,Module 'flask' not found,4
+      python.import.resolvable,error,Module 'flask_cors' not found,5
+  pactfix-py/tests/test_analyzer.py,0.71
+    issues[2]{rule,severity,message,line}:
+      python.import.resolvable,error,Module 'pytest' not found,4
+      python.import.resolvable,error,Module 'pactfix.analyzer' not found,5
+  pactfix-py/tests/test_comprehensive.py,0.91
+    issues[2]{rule,severity,message,line}:
+      python.import.resolvable,error,Module 'pytest' not found,15
+      python.import.resolvable,error,Module 'pactfix.analyzer' not found,20
+  server.py,0.97
+    issues[1]{rule,severity,message,line}:
+      python.import.resolvable,error,Module 'pactfix.analyzer' not found,43
+
+UNSUPPORTED[6]{bucket,count}:
+  *.md,19
+  Dockerfile*,15
+  *.txt,5
+  *.yml,13
+  *.example,1
+  other,36

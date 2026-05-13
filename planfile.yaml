@@ -1,0 +1,1631 @@
+name: Code Quality Improvement
+project_name: ''
+project_type: prefactoring
+domain: dev-tools
+goal: Improve code quality using prefact
+goals:
+- Fix all prefact-detected issues
+- Improve code maintainability
+- Ensure consistent code style
+quality_gates:
+- metric: Prefact Issues
+  threshold: '0'
+sprints:
+- id: sprint-1
+  name: Code Quality Improvements
+  duration: 2 weeks
+  objectives:
+  - Fix code quality issues
+  task_patterns:
+  - id: ticket-f9fc68d8
+    name: Fix smart-return-type issues
+    description: Resolve 2 smart-return-type issues in examples/python/fixed/fixed_faulty.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - examples/python/fixed/fixed_faulty.py
+    rule_id: smart-return-type
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-3ff9c3fb
+    name: Fix unused-imports issues
+    description: Resolve 4 unused-imports issues in examples/python/fixed/fixed_faulty.py
+    task_type: prefactor
+    priority: medium
+    estimate: 2d
+    files:
+    - examples/python/fixed/fixed_faulty.py
+    rule_id: unused-imports
+    count: 4
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-68af7608
+    name: Fix ai-boilerplate issues
+    description: Resolve 1 ai-boilerplate issues in examples/python/fixed/fixed_faulty.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - examples/python/fixed/fixed_faulty.py
+    rule_id: ai-boilerplate
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-56b898af
+    name: Fix smart-return-type issues
+    description: Resolve 2 smart-return-type issues in examples/python/fixed/fixed_fixed.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - examples/python/fixed/fixed_fixed.py
+    rule_id: smart-return-type
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-bcf7ab21
+    name: Fix unused-imports issues
+    description: Resolve 4 unused-imports issues in examples/python/fixed/fixed_fixed.py
+    task_type: prefactor
+    priority: medium
+    estimate: 2d
+    files:
+    - examples/python/fixed/fixed_fixed.py
+    rule_id: unused-imports
+    count: 4
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-0535a2da
+    name: Fix ai-boilerplate issues
+    description: Resolve 1 ai-boilerplate issues in examples/python/fixed/fixed_fixed.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - examples/python/fixed/fixed_fixed.py
+    rule_id: ai-boilerplate
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-4d861eb9
+    name: Fix smart-return-type issues
+    description: Resolve 2 smart-return-type issues in examples/.pactfix/fixed/python/faulty.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - examples/.pactfix/fixed/python/faulty.py
+    rule_id: smart-return-type
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-242ba905
+    name: Fix unused-imports issues
+    description: Resolve 4 unused-imports issues in examples/.pactfix/fixed/python/faulty.py
+    task_type: prefactor
+    priority: medium
+    estimate: 2d
+    files:
+    - examples/.pactfix/fixed/python/faulty.py
+    rule_id: unused-imports
+    count: 4
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-b7bea74c
+    name: Fix ai-boilerplate issues
+    description: Resolve 1 ai-boilerplate issues in examples/.pactfix/fixed/python/faulty.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - examples/.pactfix/fixed/python/faulty.py
+    rule_id: ai-boilerplate
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-0649086f
+    name: Fix ai-boilerplate issues
+    description: Resolve 1 ai-boilerplate issues in examples/python/faulty.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - examples/python/faulty.py
+    rule_id: ai-boilerplate
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-a0a5aa99
+    name: Fix smart-return-type issues
+    description: Resolve 2 smart-return-type issues in examples/python/fixed.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - examples/python/fixed.py
+    rule_id: smart-return-type
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-60b74330
+    name: Fix unused-imports issues
+    description: Resolve 4 unused-imports issues in examples/python/fixed.py
+    task_type: prefactor
+    priority: medium
+    estimate: 2d
+    files:
+    - examples/python/fixed.py
+    rule_id: unused-imports
+    count: 4
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-e2f6cffe
+    name: Fix ai-boilerplate issues
+    description: Resolve 1 ai-boilerplate issues in examples/python/fixed.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - examples/python/fixed.py
+    rule_id: ai-boilerplate
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-64e7529f
+    name: Fix smart-return-type issues
+    description: Resolve 2 smart-return-type issues in output.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - output.py
+    rule_id: smart-return-type
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-2faad513
+    name: Fix ai-boilerplate issues
+    description: Resolve 1 ai-boilerplate issues in output.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - output.py
+    rule_id: ai-boilerplate
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-2ed953d3
+    name: Fix smart-return-type issues
+    description: Resolve 2 smart-return-type issues in examples/python/fixed_js.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - examples/python/fixed_js.py
+    rule_id: smart-return-type
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-0cd4418a
+    name: Fix unused-imports issues
+    description: Resolve 4 unused-imports issues in examples/python/fixed_js.py
+    task_type: prefactor
+    priority: medium
+    estimate: 2d
+    files:
+    - examples/python/fixed_js.py
+    rule_id: unused-imports
+    count: 4
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-624bf90a
+    name: Fix ai-boilerplate issues
+    description: Resolve 1 ai-boilerplate issues in examples/python/fixed_js.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - examples/python/fixed_js.py
+    rule_id: ai-boilerplate
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-53cfd816
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/__main__.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/__main__.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-2fdea439
+    name: Fix ai-boilerplate issues
+    description: Resolve 1 ai-boilerplate issues in pactfix-py/pactfix/__main__.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/__main__.py
+    rule_id: ai-boilerplate
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-25dc6745
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/ansible.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/ansible.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-b25ef2d4
+    name: Fix unused-imports issues
+    description: Resolve 4 unused-imports issues in pactfix-py/pactfix/analyzers/ansible.py
+    task_type: prefactor
+    priority: medium
+    estimate: 2d
+    files:
+    - pactfix-py/pactfix/analyzers/ansible.py
+    rule_id: unused-imports
+    count: 4
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-8e8f20f7
+    name: Fix relative-imports issues
+    description: Resolve 64 relative-imports issues in pactfix-py/pactfix/analyzers/__init__.py
+    task_type: prefactor
+    priority: high
+    estimate: 3d
+    files:
+    - pactfix-py/pactfix/analyzers/__init__.py
+    rule_id: relative-imports
+    count: 64
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-bc66c480
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzer.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzer.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-624aa9b9
+    name: Fix string-concat issues
+    description: Resolve 2 string-concat issues in pactfix-py/pactfix/analyzer.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzer.py
+    rule_id: string-concat
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-caf7ac3d
+    name: Fix magic-numbers issues
+    description: Resolve 7 magic-numbers issues in pactfix-py/pactfix/analyzer.py
+    task_type: prefactor
+    priority: high
+    estimate: 2d
+    files:
+    - pactfix-py/pactfix/analyzer.py
+    rule_id: magic-numbers
+    count: 7
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-d88afa33
+    name: Fix ai-boilerplate issues
+    description: Resolve 1 ai-boilerplate issues in pactfix-py/pactfix/analyzer.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzer.py
+    rule_id: ai-boilerplate
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-018bb797
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/apache.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/apache.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-8d9df446
+    name: Fix string-concat issues
+    description: Resolve 12 string-concat issues in pactfix-py/pactfix/analyzers/apache.py
+    task_type: prefactor
+    priority: high
+    estimate: 3d
+    files:
+    - pactfix-py/pactfix/analyzers/apache.py
+    rule_id: string-concat
+    count: 12
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-5c2bb670
+    name: Fix magic-numbers issues
+    description: Resolve 3 magic-numbers issues in pactfix-py/pactfix/analyzers/apache.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/apache.py
+    rule_id: magic-numbers
+    count: 3
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-20bd197d
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/bash.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/bash.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-f1a8977e
+    name: Fix string-concat issues
+    description: Resolve 3 string-concat issues in pactfix-py/pactfix/analyzers/bash.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/bash.py
+    rule_id: string-concat
+    count: 3
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-e4deeb7a
+    name: Fix unused-imports issues
+    description: Resolve 6 unused-imports issues in pactfix-py/pactfix/analyzers/bash.py
+    task_type: prefactor
+    priority: high
+    estimate: 2d
+    files:
+    - pactfix-py/pactfix/analyzers/bash.py
+    rule_id: unused-imports
+    count: 6
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-12f6f080
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/csharp.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/csharp.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-65675920
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/css.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/css.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-1f1e57ad
+    name: Fix string-concat issues
+    description: Resolve 1 string-concat issues in pactfix-py/pactfix/analyzers/css.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/css.py
+    rule_id: string-concat
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-686d2bf8
+    name: Fix magic-numbers issues
+    description: Resolve 2 magic-numbers issues in pactfix-py/pactfix/analyzers/css.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/css.py
+    rule_id: magic-numbers
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-5779743d
+    name: Fix ai-boilerplate issues
+    description: Resolve 1 ai-boilerplate issues in pactfix-py/pactfix/analyzers/docker_compose.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/docker_compose.py
+    rule_id: ai-boilerplate
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-561ffb7a
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/dockerfile.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/dockerfile.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-1d853685
+    name: Fix string-concat issues
+    description: Resolve 3 string-concat issues in pactfix-py/pactfix/analyzers/dockerfile.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/dockerfile.py
+    rule_id: string-concat
+    count: 3
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-85fc79bd
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/github_actions.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/github_actions.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-d06cc601
+    name: Fix unused-imports issues
+    description: Resolve 2 unused-imports issues in pactfix-py/pactfix/analyzers/github_actions.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/github_actions.py
+    rule_id: unused-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-44b88fe7
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/gitlab_ci.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/gitlab_ci.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-d619eb1b
+    name: Fix string-concat issues
+    description: Resolve 3 string-concat issues in pactfix-py/pactfix/analyzers/gitlab_ci.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/gitlab_ci.py
+    rule_id: string-concat
+    count: 3
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-bbc2b155
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/go.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/go.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-ce4b11e5
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/helm.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/helm.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-7a8efb9c
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/ini_generic.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/ini_generic.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-14aa7a10
+    name: Fix string-concat issues
+    description: Resolve 1 string-concat issues in pactfix-py/pactfix/analyzers/ini_generic.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/ini_generic.py
+    rule_id: string-concat
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-45b517e5
+    name: Fix unused-imports issues
+    description: Resolve 2 unused-imports issues in pactfix-py/pactfix/analyzers/ini_generic.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/ini_generic.py
+    rule_id: unused-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-7a294433
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/html.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/html.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-69212471
+    name: Fix string-concat issues
+    description: Resolve 1 string-concat issues in pactfix-py/pactfix/analyzers/html.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/html.py
+    rule_id: string-concat
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-37641ce9
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/java.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/java.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-c4c482af
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/json_generic.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/json_generic.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-ba27c8bc
+    name: Fix smart-return-type issues
+    description: Resolve 1 smart-return-type issues in pactfix-py/pactfix/analyzers/json_generic.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/json_generic.py
+    rule_id: smart-return-type
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-ed2ba2fa
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/jenkinsfile.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/jenkinsfile.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-c677d1cc
+    name: Fix string-concat issues
+    description: Resolve 2 string-concat issues in pactfix-py/pactfix/analyzers/jenkinsfile.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/jenkinsfile.py
+    rule_id: string-concat
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-1bcc2d2f
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/javascript.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/javascript.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-f6cd4bcc
+    name: Fix unused-imports issues
+    description: Resolve 2 unused-imports issues in pactfix-py/pactfix/analyzers/javascript.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/javascript.py
+    rule_id: unused-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-ffd76901
+    name: Fix ai-boilerplate issues
+    description: Resolve 1 ai-boilerplate issues in pactfix-py/pactfix/analyzers/kubernetes.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/kubernetes.py
+    rule_id: ai-boilerplate
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-2a875725
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/makefile.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/makefile.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-2aff65d7
+    name: Fix string-concat issues
+    description: Resolve 1 string-concat issues in pactfix-py/pactfix/analyzers/makefile.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/makefile.py
+    rule_id: string-concat
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-06ce77df
+    name: Fix relative-imports issues
+    description: Resolve 4 relative-imports issues in pactfix-py/pactfix/analyzers/markdown.py
+    task_type: prefactor
+    priority: medium
+    estimate: 2d
+    files:
+    - pactfix-py/pactfix/analyzers/markdown.py
+    rule_id: relative-imports
+    count: 4
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-5859dff6
+    name: Fix unused-imports issues
+    description: Resolve 2 unused-imports issues in pactfix-py/pactfix/analyzers/markdown.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/markdown.py
+    rule_id: unused-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-bfb3c3c6
+    name: Fix relative-imports issues
+    description: Resolve 4 relative-imports issues in pactfix-py/pactfix/analyzers/markpact.py
+    task_type: prefactor
+    priority: medium
+    estimate: 2d
+    files:
+    - pactfix-py/pactfix/analyzers/markpact.py
+    rule_id: relative-imports
+    count: 4
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-16d84a84
+    name: Fix ai-boilerplate issues
+    description: Resolve 1 ai-boilerplate issues in pactfix-py/pactfix/analyzers/markpact.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/markpact.py
+    rule_id: ai-boilerplate
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-9dc90675
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/nginx.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/nginx.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-c35340c2
+    name: Fix string-concat issues
+    description: Resolve 13 string-concat issues in pactfix-py/pactfix/analyzers/nginx.py
+    task_type: prefactor
+    priority: high
+    estimate: 3d
+    files:
+    - pactfix-py/pactfix/analyzers/nginx.py
+    rule_id: string-concat
+    count: 13
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-b002e31c
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/php.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/php.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-4ba11ec5
+    name: Fix unused-imports issues
+    description: Resolve 4 unused-imports issues in pactfix-py/pactfix/analyzers/php.py
+    task_type: prefactor
+    priority: medium
+    estimate: 2d
+    files:
+    - pactfix-py/pactfix/analyzers/php.py
+    rule_id: unused-imports
+    count: 4
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-c77750a7
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/python_lang.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/python_lang.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-9f5e417b
+    name: Fix string-concat issues
+    description: Resolve 2 string-concat issues in pactfix-py/pactfix/analyzers/python_lang.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/python_lang.py
+    rule_id: string-concat
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-3f20ce36
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/ruby.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/ruby.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-1f9d01b5
+    name: Fix string-concat issues
+    description: Resolve 1 string-concat issues in pactfix-py/pactfix/analyzers/ruby.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/ruby.py
+    rule_id: string-concat
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-7fea7181
+    name: Fix magic-numbers issues
+    description: Resolve 5 magic-numbers issues in pactfix-py/pactfix/analyzers/ruby.py
+    task_type: prefactor
+    priority: medium
+    estimate: 2d
+    files:
+    - pactfix-py/pactfix/analyzers/ruby.py
+    rule_id: magic-numbers
+    count: 5
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-5b366b81
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/rust.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/rust.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-80b66625
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/sql.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/sql.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-62374c14
+    name: Fix unused-imports issues
+    description: Resolve 2 unused-imports issues in pactfix-py/pactfix/analyzers/sql.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/sql.py
+    rule_id: unused-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-7d626878
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/systemd.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/systemd.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-632e89c2
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/terraform.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/terraform.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-31c299fb
+    name: Fix magic-numbers issues
+    description: Resolve 2 magic-numbers issues in pactfix-py/pactfix/analyzers/terraform.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/terraform.py
+    rule_id: magic-numbers
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-f30389ff
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/toml_generic.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/toml_generic.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-c879f63d
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/typescript.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/typescript.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-49f565de
+    name: Fix ai-boilerplate issues
+    description: Resolve 3 ai-boilerplate issues in pactfix-py/pactfix/cli.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/cli.py
+    rule_id: ai-boilerplate
+    count: 3
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-bd265690
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/analyzers/yaml_generic.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/yaml_generic.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-124df98a
+    name: Fix string-concat issues
+    description: Resolve 1 string-concat issues in pactfix-py/pactfix/analyzers/yaml_generic.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/yaml_generic.py
+    rule_id: string-concat
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-f7fd1e08
+    name: Fix magic-numbers issues
+    description: Resolve 5 magic-numbers issues in pactfix-py/pactfix/analyzers/yaml_generic.py
+    task_type: prefactor
+    priority: medium
+    estimate: 2d
+    files:
+    - pactfix-py/pactfix/analyzers/yaml_generic.py
+    rule_id: magic-numbers
+    count: 5
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-1c7db312
+    name: Fix smart-return-type issues
+    description: Resolve 1 smart-return-type issues in pactfix-py/pactfix/sandbox.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/sandbox.py
+    rule_id: smart-return-type
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-513c4faf
+    name: Fix magic-numbers issues
+    description: Resolve 4 magic-numbers issues in pactfix-py/pactfix/sandbox.py
+    task_type: prefactor
+    priority: medium
+    estimate: 2d
+    files:
+    - pactfix-py/pactfix/sandbox.py
+    rule_id: magic-numbers
+    count: 4
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-cb16b8de
+    name: Fix ai-boilerplate issues
+    description: Resolve 1 ai-boilerplate issues in pactfix-py/pactfix/sandbox.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/sandbox.py
+    rule_id: ai-boilerplate
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-4bb6457e
+    name: Fix relative-imports issues
+    description: Resolve 2 relative-imports issues in pactfix-py/pactfix/server.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/server.py
+    rule_id: relative-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-ddd99934
+    name: Fix smart-return-type issues
+    description: Resolve 6 smart-return-type issues in pactfix-py/pactfix/server.py
+    task_type: prefactor
+    priority: high
+    estimate: 2d
+    files:
+    - pactfix-py/pactfix/server.py
+    rule_id: smart-return-type
+    count: 6
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-fccd0939
+    name: Fix magic-numbers issues
+    description: Resolve 6 magic-numbers issues in pactfix-py/pactfix/server.py
+    task_type: prefactor
+    priority: high
+    estimate: 2d
+    files:
+    - pactfix-py/pactfix/server.py
+    rule_id: magic-numbers
+    count: 6
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-7b9cd1f7
+    name: Fix ai-boilerplate issues
+    description: Resolve 1 ai-boilerplate issues in pactfix-py/pactfix/server.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/server.py
+    rule_id: ai-boilerplate
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-95477031
+    name: Fix smart-return-type issues
+    description: Resolve 3 smart-return-type issues in pactfix-py/test-projects/python-project/_fixtures/faulty/main.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/test-projects/python-project/_fixtures/faulty/main.py
+    rule_id: smart-return-type
+    count: 3
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-360a4da7
+    name: Fix string-concat issues
+    description: Resolve 1 string-concat issues in pactfix-py/test-projects/python-project/_fixtures/faulty/main.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/test-projects/python-project/_fixtures/faulty/main.py
+    rule_id: string-concat
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-e771615d
+    name: Fix ai-boilerplate issues
+    description: Resolve 1 ai-boilerplate issues in pactfix-py/test-projects/python-project/_fixtures/faulty/main.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/test-projects/python-project/_fixtures/faulty/main.py
+    rule_id: ai-boilerplate
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-3d11c818
+    name: Fix smart-return-type issues
+    description: Resolve 2 smart-return-type issues in pactfix-py/test-projects/python-project/_fixtures/faulty/test_main.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/test-projects/python-project/_fixtures/faulty/test_main.py
+    rule_id: smart-return-type
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-9a13d9c8
+    name: Fix duplicate-imports issues
+    description: Resolve 1 duplicate-imports issues in pactfix-py/test-projects/python-project/_fixtures/faulty/test_main.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/test-projects/python-project/_fixtures/faulty/test_main.py
+    rule_id: duplicate-imports
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-c6276453
+    name: Fix smart-return-type issues
+    description: Resolve 3 smart-return-type issues in pactfix-py/test-projects/python-project/main.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/test-projects/python-project/main.py
+    rule_id: smart-return-type
+    count: 3
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-2c844c90
+    name: Fix string-concat issues
+    description: Resolve 1 string-concat issues in pactfix-py/test-projects/python-project/main.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/test-projects/python-project/main.py
+    rule_id: string-concat
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-658bcd8e
+    name: Fix unused-imports issues
+    description: Resolve 2 unused-imports issues in pactfix-py/test-projects/python-project/main.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/test-projects/python-project/main.py
+    rule_id: unused-imports
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-7c04c680
+    name: Fix ai-boilerplate issues
+    description: Resolve 1 ai-boilerplate issues in pactfix-py/test-projects/python-project/main.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/test-projects/python-project/main.py
+    rule_id: ai-boilerplate
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-c04a2b13
+    name: Fix smart-return-type issues
+    description: Resolve 2 smart-return-type issues in pactfix-py/test-projects/python-project/test_main.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/test-projects/python-project/test_main.py
+    rule_id: smart-return-type
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-ed0994ae
+    name: Fix duplicate-imports issues
+    description: Resolve 1 duplicate-imports issues in pactfix-py/test-projects/python-project/test_main.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/test-projects/python-project/test_main.py
+    rule_id: duplicate-imports
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-553dffbb
+    name: Fix smart-return-type issues
+    description: Resolve 5 smart-return-type issues in scripts/git_commit_helper.py
+    task_type: prefactor
+    priority: medium
+    estimate: 2d
+    files:
+    - scripts/git_commit_helper.py
+    rule_id: smart-return-type
+    count: 5
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-b74594bd
+    name: Fix string-concat issues
+    description: Resolve 2 string-concat issues in scripts/git_commit_helper.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - scripts/git_commit_helper.py
+    rule_id: string-concat
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-69fe2941
+    name: Fix ai-boilerplate issues
+    description: Resolve 1 ai-boilerplate issues in scripts/git_commit_helper.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - scripts/git_commit_helper.py
+    rule_id: ai-boilerplate
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-a22ff9ae
+    name: Fix ai-boilerplate issues
+    description: Resolve 3 ai-boilerplate issues in server.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - server.py
+    rule_id: ai-boilerplate
+    count: 3
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-fd04b3ff
+    name: Fix wildcard-imports issues
+    description: Resolve 3 wildcard-imports issues in examples/python/faulty.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - examples/python/faulty.py
+    rule_id: wildcard-imports
+    count: 3
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-ef209d9b
+    name: Fix string-concat issues
+    description: Resolve 2 string-concat issues in pactfix-py/pactfix/analyzers/ansible.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/ansible.py
+    rule_id: string-concat
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-8bcdf542
+    name: Fix string-concat issues
+    description: Resolve 1 string-concat issues in pactfix-py/pactfix/analyzers/csharp.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/csharp.py
+    rule_id: string-concat
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-e519c1a2
+    name: Fix wildcard-imports issues
+    description: Resolve 1 wildcard-imports issues in pactfix-py/pactfix/analyzers/docker_compose.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/docker_compose.py
+    rule_id: wildcard-imports
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-ca59715b
+    name: Fix string-concat issues
+    description: Resolve 2 string-concat issues in pactfix-py/pactfix/analyzers/go.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/go.py
+    rule_id: string-concat
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-25cda1f7
+    name: Fix string-concat issues
+    description: Resolve 1 string-concat issues in pactfix-py/pactfix/analyzers/java.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/java.py
+    rule_id: string-concat
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-78fa5b59
+    name: Fix string-concat issues
+    description: Resolve 2 string-concat issues in pactfix-py/pactfix/analyzers/json_generic.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/json_generic.py
+    rule_id: string-concat
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-c5521d00
+    name: Fix wildcard-imports issues
+    description: Resolve 1 wildcard-imports issues in pactfix-py/pactfix/analyzers/kubernetes.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/kubernetes.py
+    rule_id: wildcard-imports
+    count: 1
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-87ba66ea
+    name: Fix string-concat issues
+    description: Resolve 4 string-concat issues in pactfix-py/pactfix/analyzers/markdown.py
+    task_type: prefactor
+    priority: medium
+    estimate: 2d
+    files:
+    - pactfix-py/pactfix/analyzers/markdown.py
+    rule_id: string-concat
+    count: 4
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-df0d1f36
+    name: Fix string-concat issues
+    description: Resolve 8 string-concat issues in pactfix-py/pactfix/analyzers/markpact.py
+    task_type: prefactor
+    priority: high
+    estimate: 2d
+    files:
+    - pactfix-py/pactfix/analyzers/markpact.py
+    rule_id: string-concat
+    count: 8
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-1418abe3
+    name: Fix string-concat issues
+    description: Resolve 9 string-concat issues in pactfix-py/pactfix/analyzers/systemd.py
+    task_type: prefactor
+    priority: high
+    estimate: 2d
+    files:
+    - pactfix-py/pactfix/analyzers/systemd.py
+    rule_id: string-concat
+    count: 9
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-671a79e4
+    name: Fix string-concat issues
+    description: Resolve 6 string-concat issues in pactfix-py/pactfix/analyzers/terraform.py
+    task_type: prefactor
+    priority: high
+    estimate: 2d
+    files:
+    - pactfix-py/pactfix/analyzers/terraform.py
+    rule_id: string-concat
+    count: 6
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-f84c8a50
+    name: Fix string-concat issues
+    description: Resolve 2 string-concat issues in pactfix-py/pactfix/analyzers/typescript.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/analyzers/typescript.py
+    rule_id: string-concat
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-0f26fec1
+    name: Fix wildcard-imports issues
+    description: Resolve 5 wildcard-imports issues in pactfix-py/pactfix/cli.py
+    task_type: prefactor
+    priority: medium
+    estimate: 2d
+    files:
+    - pactfix-py/pactfix/cli.py
+    rule_id: wildcard-imports
+    count: 5
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-9e1c213d
+    name: Fix string-concat issues
+    description: Resolve 2 string-concat issues in pactfix-py/pactfix/sandbox.py
+    task_type: prefactor
+    priority: medium
+    estimate: 1d
+    files:
+    - pactfix-py/pactfix/sandbox.py
+    rule_id: string-concat
+    count: 2
+    model_hints:
+      planning: balanced
+      implementation: balanced
+  - id: ticket-c1c88998
+    name: Fix wildcard-imports issues
+    description: Resolve 5 wildcard-imports issues in server.py
+    task_type: prefactor
+    priority: medium
+    estimate: 2d
+    files:
+    - server.py
+    rule_id: wildcard-imports
+    count: 5
+    model_hints:
+      planning: balanced
+      implementation: balanced

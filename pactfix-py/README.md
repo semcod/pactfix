@@ -20,8 +20,6 @@ The `test-projects/` directory contains minimal projects for testing pactfix:
 
 Each project has `_fixtures/faulty/` with baseline code for deterministic testing.
 
-## Commands
-
 ### 1. Fix Files In Place (with comments)
 
 ```bash
@@ -39,10 +37,6 @@ pactfix --path ./my-project --comment -v  # verbose
 **Example output in file:**
 
 ```python
-# pactfix: Dodano nawiasy do print() (was: print "hello")
-print("hello")
-```
-
 ### 2. Sandbox Mode (Docker)
 
 
@@ -119,8 +113,6 @@ Creates Dockerfiles for all supported languages.
 | `--sandbox-only ./dir` | Setup only | ❌ No | ✅ Yes |
 | `input.py -o output.py` | Single file | ❌ No | ❌ No |
 
-## Supported Languages
-
 ### Code
 
 - Bash, Python, PHP, JavaScript, Node.js
@@ -133,8 +125,6 @@ Creates Dockerfiles for all supported languages.
 - nginx, GitHub Actions, Ansible
 - Apache, Systemd, Makefile
 - Helm charts, GitLab CI, Jenkinsfile
-
-## Auto-Fix Features
 
 ### Docker Compose
 
@@ -238,9 +228,6 @@ pactfix main.tf -l terraform -v --comment
 | Terraform  | hashicorp/terraform:1.6 |
 | Ansible    | python:3.11-slim        |
 
-## Examples
-
-```bash
 # Fix Python project in place with comments
 pactfix --path ./my-python-app --comment -v
 
@@ -265,8 +252,6 @@ pactfix --batch ./infrastructure --comment
 # JSON output for CI/CD integration
 pactfix k8s/ -l kubernetes --json > security-report.json
 ```
-
-### Real-world Auto-fix Examples
 
 #### Docker Compose Security Hardening
 
@@ -299,17 +284,6 @@ $ pactfix main.tf -l terraform -v
 📋 Line 10: Zamieniono access_key na zmienną
 📋 Line 76: Dodano zmienną access_key_var
 ```
-
-## Testing
-
-### Running Tests
-
-```bash
-# Run all tests
-make test
-
-# Run sandbox tests (without running tests in containers)
-make test-sandbox
 
 # Run sandbox tests with tests in containers
 make test-sandbox-tests

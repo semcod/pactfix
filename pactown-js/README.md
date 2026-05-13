@@ -9,9 +9,6 @@ npm install
 npm link  # For global CLI access
 ```
 
-## Usage
-
-```bash
 # Analyze and fix a file
 pactfix input.py -o output.py
 

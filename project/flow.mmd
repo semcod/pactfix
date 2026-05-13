@@ -1,0 +1,25 @@
+flowchart TD
+
+    %% Entry points (blue)
+    classDef entry fill:#4dabf7,stroke:#1971c2,color:#fff
+
+    subgraph Core
+        playwright__config__port["port"]
+        output__process_data["process_data"]
+        output__calculate_average["calculate_average"]
+        e2e__app__spec__waitForAnalysisDone["waitForAnalysisDone"]
+        e2e__app__spec__status["status"]
+        e2e__app__spec__input["input"]
+        e2e__app__spec__value["value"]
+        e2e__app__spec__errorCount["errorCount"]
+        e2e__app__spec__fixedCount["fixedCount"]
+        e2e__app__spec__codeLines["codeLines"]
+        e2e__app__spec__output["output"]
+        e2e__app__spec__highlightedSpans["highlightedSpans"]
+        e2e__app__spec__lineNumbers["lineNumbers"]
+        e2e__app__spec__outputHtml["outputHtml"]
+        e2e__app__spec__h["h"]
+        ...["+111 more"]
+    end
+
+    class playwright__config__port,output__process_data,output__calculate_average,e2e__app__spec__waitForAnalysisDone,e2e__app__spec__status,e2e__app__spec__input,e2e__app__spec__value,e2e__app__spec__errorCount,e2e__app__spec__fixedCount,e2e__app__spec__codeLines entry

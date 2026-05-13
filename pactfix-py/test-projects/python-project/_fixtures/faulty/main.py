@@ -11,7 +11,7 @@ def greet(name, items=[]):
 
 def check_value(val):
     """Check value with wrong comparison (PY008)."""
-    if val is "test":
+    if val == "test":
         return True
     return False
 

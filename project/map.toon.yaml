@@ -1,0 +1,371 @@
+# pactfix | 48f 8951L | python:42,shell:1,typescript:2,javascript:2,java:1 | 2026-04-08
+# stats: 160 func | 0 cls | 48 mod | CC̄=13.5 | critical:50 | cycles:0
+# alerts[5]: CC detect_language=119; CC detect_language=64; CC analyze_apache=63; CC analyze_kubernetes=61; CC analyze_html=60
+# hotspots[5]: analyze_python fan=46; analyze_kubernetes fan=38; analyze_terraform fan=38; analyze_docker_compose fan=35; process_project fan=35
+# evolution: baseline
+# Keys: M=modules, D=details, i=imports, e=exports, c=classes, f=functions, m=methods
+M[48]:
+  e2e/app.spec.ts,647
+  output.py,29
+  pactfix-py/dockerfiles/Dockerfile.java,6
+  pactfix-py/pactfix/__init__.py,12
+  pactfix-py/pactfix/__main__.py,8
+  pactfix-py/pactfix/analyzer.py,482
+  pactfix-py/pactfix/analyzers/__init__.py,69
+  pactfix-py/pactfix/analyzers/ansible.py,29
+  pactfix-py/pactfix/analyzers/apache.py,187
+  pactfix-py/pactfix/analyzers/bash.py,127
+  pactfix-py/pactfix/analyzers/csharp.py,97
+  pactfix-py/pactfix/analyzers/css.py,104
+  pactfix-py/pactfix/analyzers/docker_compose.py,143
+  pactfix-py/pactfix/analyzers/dockerfile.py,74
+  pactfix-py/pactfix/analyzers/github_actions.py,35
+  pactfix-py/pactfix/analyzers/gitlab_ci.py,62
+  pactfix-py/pactfix/analyzers/go.py,91
+  pactfix-py/pactfix/analyzers/helm.py,105
+  pactfix-py/pactfix/analyzers/html.py,163
+  pactfix-py/pactfix/analyzers/ini_generic.py,59
+  pactfix-py/pactfix/analyzers/java.py,91
+  pactfix-py/pactfix/analyzers/javascript.py,41
+  pactfix-py/pactfix/analyzers/jenkinsfile.py,66
+  pactfix-py/pactfix/analyzers/json_generic.py,87
+  pactfix-py/pactfix/analyzers/kubernetes.py,353
+  pactfix-py/pactfix/analyzers/makefile.py,106
+  pactfix-py/pactfix/analyzers/markdown.py,174
+  pactfix-py/pactfix/analyzers/markpact.py,223
+  pactfix-py/pactfix/analyzers/nginx.py,156
+  pactfix-py/pactfix/analyzers/php.py,34
+  pactfix-py/pactfix/analyzers/python_lang.py,238
+  pactfix-py/pactfix/analyzers/ruby.py,93
+  pactfix-py/pactfix/analyzers/rust.py,90
+  pactfix-py/pactfix/analyzers/sql.py,53
+  pactfix-py/pactfix/analyzers/systemd.py,157
+  pactfix-py/pactfix/analyzers/terraform.py,201
+  pactfix-py/pactfix/analyzers/toml_generic.py,51
+  pactfix-py/pactfix/analyzers/typescript.py,91
+  pactfix-py/pactfix/analyzers/yaml_generic.py,116
+  pactfix-py/pactfix/cli.py,645
+  pactfix-py/pactfix/sandbox.py,578
+  pactfix-py/pactfix/server.py,107
+  pactown-js/src/index.js,5
+  pactown-js/src/analyzer.js,307
+  playwright.config.ts,38
+  project.sh,35
+  scripts/git_commit_helper.py,120
+  server.py,2166
+D:
+  pactfix-py/pactfix/analyzer.py:
+    e: Issue,Fix,AnalysisResult,detect_language,add_fix_comments,_apply_edits_to_lines,analyze_code
+    Issue:
+    Fix:
+    AnalysisResult: to_dict(0)
+    detect_language(code;filename)
+    add_fix_comments(result)
+    _apply_edits_to_lines(lines;edits)
+    analyze_code(code;filename;force_language)
+  server.py:
+    e: DebugHandler,_snippet_id_for,_snippet_path,_load_snippet,_store_snippet,_split_bash_comment,_brace_unbraced_bash_vars,apply_brace_fixes,run_shellcheck,analyze_with_builtin,apply_fixes,analyze_code,add_fix_comments,_is_path_within,_read_text_file,batch_analyze_directory,analyze_python_code,analyze_php_code,analyze_javascript_code,analyze_dockerfile,analyze_docker_compose,analyze_sql,analyze_terraform,analyze_kubernetes,analyze_nginx_config,analyze_github_actions,analyze_ansible,analyze_markdown,detect_language,analyze_code_multi,add_fix_comments_lang,main
+    DebugHandler(SimpleHTTPRequestHandler): __init__(0),do_GET(0),do_POST(0),_call_pactfix_api(1),do_OPTIONS(0),log_message(1)  # HTTP handler for the debug server...
+    _snippet_id_for(code;mode)
+    _snippet_path(snippet_id)
+    _load_snippet(snippet_id)
+    _store_snippet(snippet_id;snippet)
+    _split_bash_comment(line)
+    _brace_unbraced_bash_vars(line)
+    apply_brace_fixes(code)
+    run_shellcheck(code)
+    analyze_with_builtin(code)
+    apply_fixes(code;issues)
+    analyze_code(code)
+    add_fix_comments(code;fixes)
+    _is_path_within(base;target)
+    _read_text_file(path;max_bytes)
+    batch_analyze_directory(root;max_files;max_bytes;include_hidden;include_details;workers)
+    analyze_python_code(code)
+    analyze_php_code(code)
+    analyze_javascript_code(code)
+    analyze_dockerfile(code)
+    analyze_docker_compose(code)
+    analyze_sql(code)
+    analyze_terraform(code)
+    analyze_kubernetes(code)
+    analyze_nginx_config(code)
+    analyze_github_actions(code)
+    analyze_ansible(code)
+    analyze_markdown(code)
+    detect_language(code;filename)
+    analyze_code_multi(code;force_language;filename)
+    add_fix_comments_lang(code;fixes;comment_char)
+    main()
+  pactfix-py/pactfix/analyzers/apache.py:
+    e: analyze_apache
+    analyze_apache(code)
+  pactfix-py/pactfix/analyzers/kubernetes.py:
+    e: analyze_kubernetes,_find_container_key_line_by_index,_find_container_line,_get_line_indent,_find_insert_position,_suggest_image_tag
+    analyze_kubernetes(code)
+    _find_container_key_line_by_index(lines;container_index;key)
+    _find_container_line(lines;container_name;key)
+    _get_line_indent(line)
+    _find_insert_position(lines;start_line;container_name)
+    _suggest_image_tag(image)
+  pactfix-py/pactfix/analyzers/html.py:
+    e: analyze_html
+    analyze_html(code)
+  pactfix-py/pactfix/analyzers/python_lang.py:
+    e: _split_python_comment,analyze_python
+    _split_python_comment(line)
+    analyze_python(code)
+  pactfix-py/pactfix/analyzers/nginx.py:
+    e: analyze_nginx
+    analyze_nginx(code)
+  pactfix-py/pactfix/analyzers/docker_compose.py:
+    e: analyze_docker_compose
+    analyze_docker_compose(code)
+  pactown-js/src/analyzer.js:
+    i: fs,path
+    e: detectLanguage,ext,lines,firstLine,analyzeBash,lines,lineNum,stripped,fixed,analyzePython,lines,lineNum,stripped,fixed,analyzePHP,lines,lineNum,stripped,analyzeJavaScript,lines,lineNum,fixed,applyFixes,lines,lineNum,lineNum,analyzeCode,lang,analyzer,fixedCode,analyzeFile,code,result
+    detectLanguage()
+    ext()
+    lines()
+    firstLine()
+    analyzeBash()
+    lines()
+    lineNum()
+    stripped()
+    fixed()
+    analyzePython()
+    lines()
+    lineNum()
+    stripped()
+    fixed()
+    analyzePHP()
+    lines()
+    lineNum()
+    stripped()
+    analyzeJavaScript()
+    lines()
+    lineNum()
+    fixed()
+    applyFixes()
+    lines()
+    lineNum()
+    lineNum()
+    analyzeCode()
+    lang()
+    analyzer()
+    fixedCode()
+    analyzeFile()
+    code()
+    result()
+  pactfix-py/pactfix/analyzers/terraform.py:
+    e: analyze_terraform
+    analyze_terraform(code)
+  pactfix-py/pactfix/analyzers/systemd.py:
+    e: analyze_systemd
+    analyze_systemd(code)
+  pactfix-py/pactfix/analyzers/makefile.py:
+    e: analyze_makefile
+    analyze_makefile(code)
+  pactfix-py/pactfix/analyzers/yaml_generic.py:
+    e: analyze_yaml
+    analyze_yaml(code)
+  pactfix-py/pactfix/analyzers/csharp.py:
+    e: analyze_csharp
+    analyze_csharp(code)
+  pactfix-py/pactfix/analyzers/java.py:
+    e: analyze_java
+    analyze_java(code)
+  pactfix-py/pactfix/cli.py:
+    e: main,process_file,process_stdin,process_batch,fix_all_examples,init_dockerfiles,setup_sandbox_only,process_project
+    main()
+    process_file(input_path;output_path;language;comment;log_file;verbose;as_json)
+    process_stdin(output_path;language;comment;log_file;verbose;as_json)
+    process_batch(directory;verbose)
+    fix_all_examples(verbose;comment)
+    init_dockerfiles(output_dir)
+    setup_sandbox_only(project_path;verbose)
+    process_project(project_path;comment;sandbox;run_tests;verbose)
+  pactfix-py/pactfix/analyzers/go.py:
+    e: analyze_go
+    analyze_go(code)
+  pactfix-py/pactfix/analyzers/helm.py:
+    e: analyze_helm
+    analyze_helm(code)
+  pactfix-py/pactfix/analyzers/css.py:
+    e: analyze_css
+    analyze_css(code)
+  pactfix-py/pactfix/analyzers/rust.py:
+    e: analyze_rust
+    analyze_rust(code)
+  pactfix-py/pactfix/analyzers/typescript.py:
+    e: analyze_typescript
+    analyze_typescript(code)
+  pactfix-py/pactfix/analyzers/dockerfile.py:
+    e: analyze_dockerfile
+    analyze_dockerfile(code)
+  pactfix-py/pactfix/analyzers/markpact.py:
+    e: _resolve_language,_find_block_line,analyze_markpact
+    _resolve_language(lang;kind;meta;body)
+    _find_block_line(code;match)
+    analyze_markpact(code)
+  pactfix-py/pactfix/analyzers/ruby.py:
+    e: analyze_ruby
+    analyze_ruby(code)
+  pactfix-py/pactfix/analyzers/sql.py:
+    e: analyze_sql
+    analyze_sql(code)
+  pactfix-py/pactfix/analyzers/jenkinsfile.py:
+    e: analyze_jenkinsfile
+    analyze_jenkinsfile(code)
+  pactfix-py/pactfix/analyzers/gitlab_ci.py:
+    e: analyze_gitlab_ci
+    analyze_gitlab_ci(code)
+  pactfix-py/pactfix/sandbox.py:
+    e: Sandbox,detect_project_language,create_language_dockerfile,create_all_dockerfiles
+    Sandbox: __init__(2),setup(0),_generate_docker_compose(0),_generate_dockerignore(0),copy_fixed_files(1),build(0),run(1),test(0),cleanup(0)  # Docker-based sandbox for running and testing fixed code...
+    detect_project_language(project_path)
+    create_language_dockerfile(language;output_dir)
+    create_all_dockerfiles(output_dir)
+  pactfix-py/pactfix/analyzers/bash.py:
+    e: _brace_unbraced_bash_vars,_split_bash_comment,analyze_bash
+    _brace_unbraced_bash_vars(line)
+    _split_bash_comment(line)
+    analyze_bash(code)
+  pactfix-py/pactfix/analyzers/ini_generic.py:
+    e: analyze_ini
+    analyze_ini(code)
+  pactfix-py/pactfix/analyzers/json_generic.py:
+    e: _pos_to_line_col,_load_with_duplicates,analyze_json
+    _pos_to_line_col(code;pos)
+    _load_with_duplicates(code)
+    analyze_json(code)
+  pactfix-py/pactfix/analyzers/php.py:
+    e: analyze_php
+    analyze_php(code)
+  pactfix-py/pactfix/analyzers/github_actions.py:
+    e: analyze_github_actions
+    analyze_github_actions(code)
+  pactfix-py/pactfix/analyzers/ansible.py:
+    e: analyze_ansible
+    analyze_ansible(code)
+  pactfix-py/pactfix/analyzers/javascript.py:
+    e: analyze_javascript
+    analyze_javascript(code;is_nodejs)
+  scripts/git_commit_helper.py:
+    e: get_staged_files,categorize_file,generate_commit_message,get_current_version,bump_version,update_version_file,update_changelog,main
+    get_staged_files()
+    categorize_file(filename)
+    generate_commit_message(files)
+    get_current_version()
+    bump_version(version)
+    update_version_file(new_version)
+    update_changelog(version;files)
+    main()
+  pactfix-py/pactfix/analyzers/toml_generic.py:
+    e: analyze_toml
+    analyze_toml(code)
+  pactfix-py/pactfix/analyzers/markdown.py:
+    e: analyze_markdown
+    analyze_markdown(code)
+  output.py:
+    e: process_data,calculate_average
+    process_data(items)
+    calculate_average(numbers)
+  pactfix-py/pactfix/server.py:
+    e: health,analyze,detect,languages,create_app,run_server
+    health()
+    analyze()
+    detect()
+    languages()
+    create_app()
+    run_server(host;port;debug)
+  playwright.config.ts:
+    i: @playwright/test
+    e: port
+    port()
+  e2e/app.spec.ts:
+    i: @playwright/test
+    e: waitForAnalysisDone,status,input,input,status,input,value,status,errorCount,fixedCount,codeLines,input,status,status,input,output,highlightedSpans,input,lineNumbers,outputHtml,h,hash,h,hash,input,value,status,langBadge,response,data,response,data,response,data,response,result,data,response,data,response,data,response,data,data,response,data,response,data,response,data,response,data,response,response,data,response,data,hasQuoteError,response,response,data,response,data,response,data,response,data,response,data,response,data,response,data,response,data,response,data
+    waitForAnalysisDone()
+    status()
+    input()
+    input()
+    status()
+    input()
+    value()
+    status()
+    errorCount()
+    fixedCount()
+    codeLines()
+    input()
+    status()
+    status()
+    input()
+    output()
+    highlightedSpans()
+    input()
+    lineNumbers()
+    outputHtml()
+    h()
+    hash()
+    h()
+    hash()
+    input()
+    value()
+    status()
+    langBadge()
+    response()
+    data()
+    response()
+    data()
+    response()
+    data()
+    response()
+    result()
+    data()
+    response()
+    data()
+    response()
+    data()
+    response()
+    data()
+    data()
+    response()
+    data()
+    response()
+    data()
+    response()
+    data()
+    response()
+    data()
+    response()
+    response()
+    data()
+    response()
+    data()
+    hasQuoteError()
+    response()
+    response()
+    data()
+    response()
+    data()
+    response()
+    data()
+    response()
+    data()
+    response()
+    data()
+    response()
+    data()
+    response()
+    data()
+    response()
+    data()
+    response()
+    data()
+  project.sh:
+  pactown-js/src/index.js:
+  pactfix-py/pactfix/__init__.py:
+  pactfix-py/pactfix/__main__.py:
+  pactfix-py/pactfix/analyzers/__init__.py:
+  pactfix-py/dockerfiles/Dockerfile.java:

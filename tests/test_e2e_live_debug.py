@@ -108,11 +108,13 @@ done
                     out = "\n".join(self.proc.stdout.readlines()[-50:])
                 except Exception:  # noqa: BLE001
                     out = ""
-            raise AssertionError(f"Request failed: {e}\nServer output tail:\n{out}") from e
+            raise AssertionError(
+                f"Request failed: {e}\nServer output tail:\n{out}"
+            ) from e
 
         self.assertEqual(result.get("originalCode"), code)
         fixed = result.get("fixedCode", "")
-        self.assertIn("hostname -f)\"", fixed)
+        self.assertIn('hostname -f)"', fixed)
         self.assertIn("# ✅ NAPRAWIONO", fixed)
 
         errors = result.get("errors") or []
@@ -143,7 +145,9 @@ done
 
         warnings = result.get("warnings") or []
         self.assertTrue(any(w.get("code") == "BASH001" for w in warnings))
-        self.assertFalse(any(w.get("code") == "SC2086" and w.get("line") == 5 for w in warnings))
+        self.assertFalse(
+            any(w.get("code") == "SC2086" and w.get("line") == 5 for w in warnings)
+        )
 
     def test_api_batch_analyze_scans_directory(self) -> None:
         fixture_dir = self.repo_root / "tests" / "_batch_fixture"
@@ -177,9 +181,15 @@ done
             self.assertGreaterEqual(int(totals.get("errors") or 0), 1)
 
             files = payload.get("files") or []
-            self.assertTrue(any(f.get("path") == "tests/_batch_fixture/faulty.py" for f in files))
-            self.assertTrue(any(f.get("path") == "tests/_batch_fixture/ok.py" for f in files))
-            faulty = next(f for f in files if f.get("path") == "tests/_batch_fixture/faulty.py")
+            self.assertTrue(
+                any(f.get("path") == "tests/_batch_fixture/faulty.py" for f in files)
+            )
+            self.assertTrue(
+                any(f.get("path") == "tests/_batch_fixture/ok.py" for f in files)
+            )
+            faulty = next(
+                f for f in files if f.get("path") == "tests/_batch_fixture/faulty.py"
+            )
             self.assertGreaterEqual(int(faulty.get("errors") or 0), 1)
         finally:
             for p in fixture_dir.glob("*"):

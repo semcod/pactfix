@@ -9,5 +9,5 @@ def test_import_and_basic_behavior():
 def test_literal_comparison_is_fixed():
     import main
 
-    val = ''.join(['t', 'e', 's', 't'])
+    val = "".join(["t", "e", "s", "t"])
     assert main.check_value(val) is True

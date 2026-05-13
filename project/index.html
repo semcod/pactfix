@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>code2llm Analysis Results</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/yaml.min.js"></script>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --border: #475569;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --success: #22c55e;
+            --warning: #eab308;
+            --error: #ef4444;
+        }
+        
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg: #f8fafc;
+                --surface: #ffffff;
+                --surface-hover: #f1f5f9;
+                --border: #e2e8f0;
+                --text: #1e293b;
+                --text-muted: #64748b;
+            }
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .header {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .header h1 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .header p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+        
+        .search {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .search input {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 0.375rem;
+            color: var(--text);
+            font-size: 0.875rem;
+            outline: none;
+        }
+        
+        .search input:focus {
+            border-color: var(--accent);
+        }
+        
+        .search input::placeholder {
+            color: var(--text-muted);
+        }
+        
+        .file-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+        
+        .file-group {
+            margin-bottom: 1rem;
+        }
+        
+        .file-group-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            padding: 0.5rem 0.75rem;
+            font-weight: 600;
+        }
+        
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background 0.15s;
+            font-size: 0.875rem;
+        }
+        
+        .file-item:hover {
+            background: var(--surface-hover);
+        }
+        
+        .file-item.active {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .file-item.active .file-meta {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .file-icon {
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .file-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .file-name {
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .file-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .file-size {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+        
+        .empty-state {
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+        
+        /* Main content */
+        .content {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .content-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .content-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .content-title h2 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .content-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            background: var(--surface-hover);
+            border: 1px solid var(--border);
+            border-radius: 0.375rem;
+            color: var(--text);
+            font-size: 0.875rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.15s;
+        }
+        
+        .btn:hover {
+            background: var(--border);
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+        
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+        
+        .content-body {
+            flex: 1;
+            overflow: auto;
+            padding: 1.5rem;
+        }
+        
+        .welcome {
+            max-width: 600px;
+            margin: 2rem auto;
+            text-align: center;
+        }
+        
+        .welcome h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .welcome p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+        
+        pre {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        
+        /* Markdown rendered content styles */
+        .markdown-content {
+            line-height: 1.6;
+            max-width: 100%;
+        }
+        
+        .markdown-content h1, .markdown-content h2, .markdown-content h3,
+        .markdown-content h4, .markdown-content h5, .markdown-content h6 {
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+        
+        .markdown-content h1 { font-size: 1.75rem; border-bottom: 2px solid var(--border); padding-bottom: 0.5rem; }
+        .markdown-content h2 { font-size: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.4rem; }
+        .markdown-content h3 { font-size: 1.25rem; }
+        .markdown-content h4 { font-size: 1.1rem; }
+        
+        .markdown-content p {
+            margin-bottom: 1rem;
+        }
+        
+        .markdown-content ul, .markdown-content ol {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+        }
+        
+        .markdown-content li {
+            margin-bottom: 0.25rem;
+        }
+        
+        .markdown-content code {
+            background: var(--surface);
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 0.875em;
+        }
+        
+        .markdown-content pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .markdown-content blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: 1rem;
+            margin-left: 0;
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+        }
+        
+        .markdown-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .markdown-content th, .markdown-content td {
+            border: 1px solid var(--border);
+            padding: 0.5rem 0.75rem;
+            text-align: left;
+        }
+        
+        .markdown-content th {
+            background: var(--surface);
+            font-weight: 600;
+        }
+        
+        .markdown-content tr:nth-child(even) {
+            background: var(--surface-hover);
+        }
+        
+        .markdown-content a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        .markdown-content a:hover {
+            text-decoration: underline;
+        }
+        
+        .markdown-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+        }
+        
+        .markdown-content hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 1.5rem 0;
+        }
+        
+        /* Mermaid diagram styles */
+        .mermaid-content {
+            display: flex;
+            justify-content: center;
+            padding: 1rem;
+            background: var(--surface);
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+        }
+        
+        .mermaid-content .mermaid {
+            background: transparent;
+        }
+        
+        /* Image preview styles */
+        .image-preview {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 1rem;
+            background: var(--surface);
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+        }
+        
+        .image-preview img {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr;
+            }
+            
+            .sidebar {
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                max-height: 40vh;
+            }
+            
+            .file-list {
+                display: flex;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                gap: 0.25rem;
+                padding: 0.5rem;
+            }
+            
+            .file-group {
+                display: flex;
+                flex-direction: row;
+                margin: 0;
+            }
+            
+            .file-group-title {
+                display: none;
+            }
+            
+            .file-item {
+                flex-direction: column;
+                min-width: 80px;
+                padding: 0.5rem;
+                text-align: center;
+            }
+            
+            .file-info {
+                display: none;
+            }
+            
+            .file-size {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="header">
+                <h1>🔍 code2llm</h1>
+                <p>Analysis Results Browser</p>
+            </div>
+            <div class="search">
+                <input type="text" id="search" placeholder="Search files..." oninput="filterFiles(this.value)">
+            </div>
+            <div class="file-list" id="fileList">
+                <!-- Files will be rendered here -->
+            </div>
+        </aside>
+        
+        <main class="content">
+            <div class="content-header">
+                <div class="content-title">
+                    <span id="contentIcon">📁</span>
+                    <h2 id="contentTitle">Welcome</h2>
+                </div>
+                <div class="content-actions" id="contentActions">
+                    <!-- Actions will be rendered here -->
+                </div>
+            </div>
+            <div class="content-body" id="contentBody">
+                <div class="welcome">
+                    <h2>Analysis Results</h2>
+                    <p>Select a file from the sidebar to view its contents. This interface works on GitHub Pages without any server required.</p>
+                    <div class="stats-grid" id="statsGrid">
+                        <!-- Stats will be rendered here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Initialize mermaid
+        mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+        
+        const files = [{"name": "calls.png", "rel_path": "calls.png", "path": "calls.png", "size": "278.9KB", "icon": "🖼️", "type": "image", "type_name": "Image", "content": "[Binary file]", "is_subdir": false}, {"name": "compact_flow.png", "rel_path": "compact_flow.png", "path": "compact_flow.png", "size": "17.8KB", "icon": "🖼️", "type": "image", "type_name": "Image", "content": "[Binary file]", "is_subdir": false}, {"name": "flow.png", "rel_path": "flow.png", "path": "flow.png", "size": "19.1KB", "icon": "🖼️", "type": "image", "type_name": "Image", "content": "[Binary file]", "is_subdir": false}, {"name": "README.md", "rel_path": "README.md", "path": "README.md", "size": "9.3KB", "icon": "📝", "type": "markdown", "type_name": "Markdown", "content": "# code2llm - Generated Analysis Files\n\nThis directory contains the complete analysis of your project generated by `code2llm`. Each file serves a specific purpose for understanding, refactoring, and documenting your codebase.\n\n## 📁 Generated Files Overview\n\nWhen you run `code2llm ./ -f all`, the following files are created:\n\n### 🎯 Core Analysis Files\n\n| File | Format | Purpose | Key Insights |\n|------|--------|---------|--------------|\n| `evolution.toon.yaml` | **YAML** | **📋 Refactoring queue** - Prioritized improvements | 0 refactoring actions needed |\n| `map.toon.yaml` | **YAML** | **🗺️ Structural map + project header** - Modules, imports, exports, signatures, stats, alerts, hotspots, trend | Project architecture overview |\n\n### 🤖 LLM-Ready Documentation\n\n| File | Format | Purpose | Use Case |\n|------|--------|---------|----------|\n| `prompt.txt` | **Text** | **📝 Ready-to-send prompt** - Lists all files with instructions | Attach to LLM conversation as context guide |\n| `context.md` | **Markdown** | **📖 LLM narrative** - Architecture summary | Paste into ChatGPT/Claude for code analysis |\n\n### 📊 Visualizations\n\n| File | Format | Purpose | Description |\n|------|--------|---------|-------------|\n| `flow.mmd` | **Mermaid** | **🔄 Control flow diagram** | Function call paths with complexity styling |\n| `calls.mmd` | **Mermaid** | **📞 Call graph** | Function dependencies (edges only) |\n| `compact_flow.mmd` | **Mermaid** | **📦 Module overview** | Aggregated module-level view |\n\n## 🚀 Quick Start Commands\n\n### Basic Analysis\n```bash\n# Quick health check (TOON format only)\ncode2llm ./ -f toon\n\n# Generate all formats (what created these files)\ncode2llm ./ -f all\n\n# LLM-ready context only\ncode2llm ./ -f context\n```\n\n### Performance Options\n```bash\n# Fast analysis for large projects\ncode2llm ./ -f toon --strategy quick\n\n# Memory-limited analysis\ncode2llm ./ -f all --max-memory 500\n\n# Skip PNG generation (faster)\ncode2llm ./ -f all --no-png\n```\n\n### Refactoring Focus\n```bash\n# Get refactoring recommendations\ncode2llm ./ -f evolution\n\n# Focus on specific code smells\ncode2llm ./ -f toon --refactor --smell god_function\n\n# Data flow analysis\ncode2llm ./ -f flow --data-flow\n```\n\n## 📖 Understanding Each File\n\n### `analysis.toon` - Health Diagnostics\n**Purpose**: Quick overview of code health issues\n**Key sections**:\n- **HEALTH**: Critical issues (🔴) and warnings (🟡)\n- **REFACTOR**: Prioritized refactoring actions\n- **COUPLING**: Module dependencies and potential cycles\n- **LAYERS**: Package complexity metrics\n- **FUNCTIONS**: High-complexity functions (CC ≥ 10)\n- **CLASSES**: Complex classes needing attention\n\n**Example usage**:\n```bash\n# View health issues\ncat analysis.toon | head -30\n\n# Check refactoring priorities\ngrep \"REFACTOR\" analysis.toon\n```\n\n### `evolution.toon.yaml` - Refactoring Queue\n**Purpose**: Step-by-step refactoring plan\n**Key sections**:\n- **NEXT**: Immediate actions to take\n- **RISKS**: Potential breaking changes\n- **METRICS-TARGET**: Success criteria\n\n**Example usage**:\n```bash\n# Get refactoring plan\ncat evolution.toon.yaml\n\n# Track progress\ngrep \"NEXT\" evolution.toon.yaml\n```\n\n### `flow.toon` - Legacy Data Flow Analysis\n**Purpose**: Understand data movement through the system (legacy / explicit opt-in)\n**Key sections**:\n- **PIPELINES**: Data processing chains\n- **CONTRACTS**: Function input/output contracts\n- **SIDE_EFFECTS**: Functions with external impacts\n\n**Example usage**:\n```bash\n# Find data pipelines\ngrep \"PIPELINES\" flow.toon\n\n# Identify side effects\ngrep \"SIDE_EFFECTS\" flow.toon\n```\n\n### `map.toon.yaml` - Structural Map + Project Header\n**Purpose**: High-level architecture overview plus compact project header\n**Key sections**:\n- **MODULES**: All modules with basic stats\n- **IMPORTS**: Dependency relationships\n- **EXPORTS**: Public API surface and signatures\n- **HEADER**: Stats, alerts, hotspots, evolution trend\n\n**Example usage**:\n```bash\n# See project structure\ncat map.toon.yaml | head -50\n\n# Find public APIs\ngrep \"SIGNATURES\" map.toon.yaml\n```\n\n### `project.toon.yaml` - Compact Analysis View\n**Purpose**: Compact module view generated from project.yaml data\n**Status**: Legacy view generated on demand from unified project.yaml\n\n**Example usage**:\n```bash\n# View compact project structure\ncat project.toon.yaml | head -30\n\n# Find largest files\ngrep -E \"^  .*[0-9]{3,}$\" project.toon.yaml | sort -t',' -k2 -n -r | head -10\n```\n\n### `prompt.txt` - Ready-to-Send LLM Prompt\n**Purpose**: Pre-formatted prompt listing all generated files for LLM conversation\n**Generation**: Written when `code2llm` runs with a source path and requests `-f all` (including `--no-chunk`) or `code2logic`\n**Contents**:\n- **Files section**: Lists all existing generated files with descriptions, including `project.toon.yaml` when generated by `-f all`\n- **Source files section**: Highlights important source files such as `cli_exports/orchestrator.py`\n- **Missing section**: Shows which files weren't generated (if any)\n- **Task section**: Refactoring brief with concrete execution instructions, not just analysis\n- **Priority Order section**: State-dependent refactoring priorities, starting with blockers and then architecture cleanup\n- **Requirements section**: Guidelines for suggested changes\n\n**Example usage**:\n```bash\n# View the prompt\ncat prompt.txt\n\n# Copy to clipboard and paste into ChatGPT/Claude\ncat prompt.txt | pbcopy  # macOS\ncat prompt.txt | xclip -sel clip  # Linux\n```\n\n### `context.md` - LLM Narrative\n**Purpose**: Ready-to-paste context for AI assistants\n**Key sections**:\n- **Overview**: Project statistics\n- **Architecture**: Module breakdown\n- **Entry Points**: Public interfaces\n- **Patterns**: Design patterns detected\n\n**Example usage**:\n```bash\n# Copy to clipboard for LLM\ncat context.md | pbcopy  # macOS\ncat context.md | xclip -sel clip  # Linux\n\n# Use with Claude/ChatGPT for code analysis\n```\n\n### Visualization Files (`*.mmd`, `*.png`)\n**Purpose**: Visual understanding of code structure\n**Files**:\n- `flow.mmd` - Detailed control flow with complexity colors\n- `calls.mmd` - Simple call graph\n- `compact_flow.mmd` - High-level module view\n- `*.png` - Pre-rendered images\n\n**Example usage**:\n```bash\n# View diagrams\nopen flow.png  # macOS\nxdg-open flow.png  # Linux\n\n# Edit in Mermaid Live Editor\n# Copy content of .mmd files to https://mermaid.live\n```\n\n## 🔍 Common Analysis Patterns\n\n### 1. Code Health Assessment\n```bash\n# Quick health check\ncode2llm ./ -f toon\ncat analysis.toon | grep -E \"(HEALTH|REFACTOR)\"\n```\n\n### 2. Refactoring Planning\n```bash\n# Get refactoring queue\ncode2llm ./ -f evolution\ncat evolution.toon.yaml\n\n# Focus on specific issues\ncode2llm ./ -f toon --refactor --smell god_function\n```\n\n### 3. LLM Assistance\n```bash\n# Generate context for AI\ncode2llm ./ -f context\ncat context.md\n\n# Use with Claude: \"Based on this context, help me refactor the god modules\"\n```\n\n### 4. Team Documentation\n```bash\n# Generate all docs for team\ncode2llm ./ -f all -o ./docs/\n\n# Create visual diagrams\nopen docs/flow.png\n```\n\n## 📊 Interpreting Metrics\n\n### Complexity Metrics (CC)\n- **🔴 Critical (≥5.0)**: Immediate refactoring needed\n- **🟠 High (3.0-4.9)**: Consider refactoring\n- **🟡 Medium (1.5-2.9)**: Monitor complexity\n- **🟢 Low (0.1-1.4)**: Acceptable\n- **⚪ Basic (0.0)**: Simple functions\n\n### Module Health\n- **GOD Module**: Too large (>500 lines, >20 methods)\n- **HUB**: High fan-out (calls many modules)\n- **FAN-IN**: High incoming dependencies\n- **CYCLES**: Circular dependencies\n\n### Data Flow Indicators\n- **PIPELINE**: Sequential data processing\n- **CONTRACT**: Clear input/output specification\n- **SIDE_EFFECT**: External state modification\n\n## 🛠️ Integration Examples\n\n### CI/CD Pipeline\n```bash\n#!/bin/bash\n# Analyze code quality in CI\ncode2llm ./ -f toon -o ./analysis\nif grep -q \"🔴 GOD\" ./analysis/analysis.toon; then\n    echo \"❌ God modules detected\"\n    exit 1\nfi\n```\n\n### Pre-commit Hook\n```bash\n#!/bin/sh\n# .git/hooks/pre-commit\ncode2llm ./ -f toon -o ./temp_analysis\nif grep -q \"🔴\" ./temp_analysis/analysis.toon; then\n    echo \"⚠️  Critical issues found. Review before committing.\"\nfi\nrm -rf ./temp_analysis\n```\n\n### Documentation Generation\n```bash\n# Generate docs for README\ncode2llm ./ -f context -o ./docs/\necho \"## Architecture\" >> README.md\ncat docs/context.md >> README.md\n```\n\n## 📚 Next Steps\n\n1. **Review `analysis.toon`** - Identify critical issues\n2. **Check `evolution.toon.yaml`** - Plan refactoring priorities\n3. **Use `context.md`** - Get LLM assistance for complex changes\n4. **Reference visualizations** - Understand system architecture\n5. **Track progress** - Re-run analysis after changes\n\n## 🔧 Advanced Usage\n\n### Custom Analysis\n```bash\n# Deep analysis with all insights\ncode2llm ./ -m hybrid -f all --max-depth 15 -v\n\n# Performance-optimized\ncode2llm ./ -m static -f toon --strategy quick\n\n# Refactoring-focused\ncode2llm ./ -f toon,evolution --refactor\n```\n\n### Output Customization\n```bash\n# Separate output directories\ncode2llm ./ -f all -o ./analysis-$(date +%Y%m%d)\n\n# Split YAML into multiple files\ncode2llm ./ -f yaml --split-output\n\n# Separate orphaned functions\ncode2llm ./ -f yaml --separate-orphans\n```\n\n---\n\n**Generated by**: `code2llm ./ -f all --readme`  \n**Analysis Date**: 2026-04-08  \n**Total Functions**: 252  \n**Total Classes**: 5  \n**Modules**: 77  \n\nFor more information about code2llm, visit: https://github.com/tom-sapletta/code2llm\n", "is_subdir": false}, {"name": "context.md", "rel_path": "context.md", "path": "context.md", "size": "18.3KB", "icon": "📝", "type": "markdown", "type_name": "Markdown", "content": "# System Architecture Analysis\n\n## Overview\n\n- **Project**: /home/tom/github/semcod/pactfix\n- **Primary Language**: python\n- **Languages**: python: 47, javascript: 14, shell: 9, php: 4, typescript: 2\n- **Analysis Mode**: static\n- **Total Functions**: 252\n- **Total Classes**: 5\n- **Modules**: 77\n- **Entry Points**: 199\n\n## Architecture by Module\n\n### e2e.app.spec\n- **Functions**: 77\n- **File**: `app.spec.ts`\n\n### server\n- **Functions**: 37\n- **Classes**: 1\n- **File**: `server.py`\n\n### pactown-js.src.analyzer\n- **Functions**: 33\n- **File**: `analyzer.js`\n\n### pactfix-py.pactfix.sandbox\n- **Functions**: 12\n- **Classes**: 1\n- **File**: `sandbox.py`\n\n### examples.nodejs.faulty\n- **Functions**: 8\n- **File**: `faulty.js`\n\n### examples.nodejs.fixed\n- **Functions**: 8\n- **File**: `fixed.js`\n\n### examples.nodejs.fixed.fixed_faulty\n- **Functions**: 8\n- **File**: `fixed_faulty.js`\n\n### examples.nodejs.fixed.fixed_fixed\n- **Functions**: 8\n- **File**: `fixed_fixed.js`\n\n### examples..pactfix.fixed.nodejs.faulty\n- **Functions**: 8\n- **File**: `faulty.js`\n\n### examples..pactfix.fixed.nodejs.fixed\n- **Functions**: 8\n- **File**: `fixed.js`\n\n### scripts.git_commit_helper\n- **Functions**: 8\n- **File**: `git_commit_helper.py`\n\n### pactfix-py.pactfix.cli\n- **Functions**: 8\n- **File**: `cli.py`\n\n### pactfix-py.pactfix.server\n- **Functions**: 6\n- **File**: `server.py`\n\n### pactfix-py.pactfix.analyzers.kubernetes\n- **Functions**: 6\n- **File**: `kubernetes.py`\n\n### examples.javascript.faulty\n- **Functions**: 5\n- **File**: `faulty.js`\n\n### examples.javascript.fixed\n- **Functions**: 5\n- **File**: `fixed.js`\n\n### examples.javascript.fixed.fixed_fixed\n- **Functions**: 5\n- **File**: `fixed_fixed.js`\n\n### examples.javascript.fixed.fixed_faulty\n- **Functions**: 5\n- **File**: `fixed_faulty.js`\n\n### examples..pactfix.fixed.javascript.fixed\n- **Functions**: 5\n- **File**: `fixed.js`\n\n### examples..pactfix.fixed.javascript.faulty\n- **Functions**: 5\n- **File**: `faulty.js`\n\n## Key Entry Points\n\nMain execution flows into the system:\n\n### pactfix-py.pactfix.analyzers.python_lang.analyze_python\n> Analyze Python code.\n- **Calls**: code.split, lines.copy, enumerate, AnalysisResult, current_line.strip, pactfix-py.pactfix.analyzers.python_lang._split_python_comment, code_part.strip, code_stripped.startswith\n\n### pactfix-py.pactfix.analyzers.apache.analyze_apache\n> Analyze Apache configuration for common issues.\n- **Calls**: code.split, lines.copy, enumerate, enumerate, enumerate, AnalysisResult, line.strip, None.startswith\n\n### pactfix-py.pactfix.analyzers.kubernetes.analyze_kubernetes\n- **Calls**: code.splitlines, lines.copy, enumerate, AnalysisResult, AnalysisResult, list, re.match, doc.get\n\n### pactfix-py.pactfix.analyzers.terraform.analyze_terraform\n- **Calls**: code.splitlines, lines.copy, set, set, enumerate, AnalysisResult, line.strip, stripped.startswith\n\n### pactfix-py.pactfix.analyzers.systemd.analyze_systemd\n> Analyze systemd unit file for common issues.\n- **Calls**: code.split, lines.copy, enumerate, AnalysisResult, line.strip, stripped.startswith, stripped.startswith, stripped.startswith\n\n### pactfix-py.pactfix.analyzers.docker_compose.analyze_docker_compose\n- **Calls**: code.splitlines, lines.copy, data.get, data.get, bool, enumerate, services.items, AnalysisResult\n\n### pactfix-py.pactfix.analyzers.nginx.analyze_nginx\n> Analyze nginx config.\n- **Calls**: code.splitlines, lines.copy, enumerate, enumerate, None.join, sorted, AnalysisResult, line.strip\n\n### pactfix-py.pactfix.analyzers.yaml_generic.analyze_yaml\n> Analyze YAML for common issues.\n- **Calls**: code.split, lines.copy, enumerate, AnalysisResult, line.strip, re.search, re.match, None.join\n\n### pactfix-py.pactfix.analyzers.helm.analyze_helm\n> Analyze Helm-related YAML/templates for common issues.\n- **Calls**: code.split, lines.copy, code.lower, AnalysisResult, warnings.append, enumerate, enumerate, re.search\n\n### pactfix-py.pactfix.analyzers.html.analyze_html\n> Analyze HTML for common issues.\n- **Calls**: code.split, lines.copy, enumerate, AnalysisResult, line.strip, stripped.lower, errors.append, fixed_lines.insert\n\n### server.DebugHandler.do_POST\n> Handle POST requests for code analysis.\n- **Calls**: urlparse, int, self.rfile.read, int, self.rfile.read, int, self.rfile.read, self.send_error\n\n### pactfix-py.pactfix.analyzers.css.analyze_css\n> Analyze CSS for common issues.\n- **Calls**: code.split, lines.copy, enumerate, AnalysisResult, line.strip, re.match, re.search, re.search\n\n### pactfix-py.pactfix.analyzers.typescript.analyze_typescript\n> Analyze TypeScript code for common issues.\n- **Calls**: code.split, lines.copy, enumerate, AnalysisResult, line.strip, re.search, re.match, re.search\n\n### pactfix-py.pactfix.analyzers.makefile.analyze_makefile\n> Analyze Makefile for common issues.\n- **Calls**: code.split, lines.copy, set, set, enumerate, AnalysisResult, line.strip, stripped.startswith\n\n### pactfix-py.pactfix.analyzers.ruby.analyze_ruby\n> Analyze Ruby code for common issues.\n- **Calls**: code.split, lines.copy, enumerate, AnalysisResult, line.strip, re.match, stripped.startswith, None.join\n\n### pactfix-py.pactfix.analyzers.go.analyze_go\n> Analyze Go code for common issues.\n- **Calls**: code.split, lines.copy, enumerate, AnalysisResult, line.strip, stripped.startswith, None.join, len\n\n### pactfix-py.pactfix.analyzers.java.analyze_java\n> Analyze Java code for common issues.\n- **Calls**: code.split, lines.copy, enumerate, AnalysisResult, line.strip, re.match, re.match, re.match\n\n### pactfix-py.pactfix.analyzers.rust.analyze_rust\n> Analyze Rust code for common issues.\n- **Calls**: code.split, lines.copy, enumerate, AnalysisResult, line.strip, re.search, re.search, re.search\n\n### pactfix-py.pactfix.analyzers.csharp.analyze_csharp\n> Analyze C# code for common issues.\n- **Calls**: code.split, lines.copy, enumerate, AnalysisResult, line.strip, re.match, re.match, re.match\n\n### pactfix-py.pactfix.analyzers.dockerfile.analyze_dockerfile\n> Analyze Dockerfile.\n- **Calls**: code.split, lines.copy, set, enumerate, AnalysisResult, line.strip, stripped.upper, upper.startswith\n\n### pactfix-py.pactfix.analyzers.gitlab_ci.analyze_gitlab_ci\n- **Calls**: code.splitlines, lines.copy, enumerate, AnalysisResult, re.match, re.search, None.join, warnings.append\n\n### pactfix-py.pactfix.analyzers.bash.analyze_bash\n> Analyze Bash script.\n- **Calls**: code.split, lines.copy, enumerate, AnalysisResult, current_line.strip, re.search, re.search, None.join\n\n### pactfix-py.pactfix.analyzers.jenkinsfile.analyze_jenkinsfile\n- **Calls**: code.splitlines, lines.copy, enumerate, AnalysisResult, re.search, re.search, None.join, warnings.append\n\n### pactfix-py.pactfix.analyzers.json_generic.analyze_json\n> Analyze JSON for common issues.\n- **Calls**: any, re.search, re.search, AnalysisResult, warnings.append, fixed_code.replace, fixes.append, warnings.append\n\n### pactfix-py.pactfix.analyzers.markpact.analyze_markpact\n> Analyze a markpact file by inspecting each markpact:* codeblock.\n\nStructural checks are performed on the markpact file itself (e.g. missing\nrun block,\n- **Calls**: list, AnalysisResult, MARKPACT_BLOCK_RE.finditer, warnings.append, AnalysisResult, m.group, warnings.append, warnings.append\n\n### pactfix-py.pactfix.analyzers.sql.analyze_sql\n> Analyze SQL.\n- **Calls**: code.split, lines.copy, set, set, enumerate, AnalysisResult, line.strip, stripped.upper\n\n### server.analyze_dockerfile\n> Analyze Dockerfile for common issues and best practices.\n- **Calls**: code.split, set, set, enumerate, line.strip, stripped.upper, upper_line.startswith, upper_line.startswith\n\n### server.analyze_markdown\n> Analyze Markdown by extracting fenced code blocks and analyzing each block.\n- **Calls**: code.split, enumerate, None.join, server.analyze_code_multi, block_result.get, out_lines.extend, blocks.append, line.strip\n\n### pactfix-py.pactfix.analyzers.ini_generic.analyze_ini\n> Analyze INI/CFG for common issues.\n- **Calls**: any, configparser.ConfigParser, AnalysisResult, warnings.append, fixed_code.replace, fixes.append, warnings.append, None.join\n\n### pactfix-py.pactfix.analyzers.markdown.analyze_markdown\n> Analyze Markdown by extracting fenced code blocks and analyzing each.\n- **Calls**: code.split, enumerate, None.join, AnalysisResult, None.join, server.analyze_code, out_lines.extend, blocks.append\n\n## Process Flows\n\nKey execution flows identified:\n\n### Flow 1: analyze_python\n```\nanalyze_python [pactfix-py.pactfix.analyzers.python_lang]\n```\n\n### Flow 2: analyze_apache\n```\nanalyze_apache [pactfix-py.pactfix.analyzers.apache]\n```\n\n### Flow 3: analyze_kubernetes\n```\nanalyze_kubernetes [pactfix-py.pactfix.analyzers.kubernetes]\n```\n\n### Flow 4: analyze_terraform\n```\nanalyze_terraform [pactfix-py.pactfix.analyzers.terraform]\n```\n\n### Flow 5: analyze_systemd\n```\nanalyze_systemd [pactfix-py.pactfix.analyzers.systemd]\n```\n\n### Flow 6: analyze_docker_compose\n```\nanalyze_docker_compose [pactfix-py.pactfix.analyzers.docker_compose]\n```\n\n### Flow 7: analyze_nginx\n```\nanalyze_nginx [pactfix-py.pactfix.analyzers.nginx]\n```\n\n### Flow 8: analyze_yaml\n```\nanalyze_yaml [pactfix-py.pactfix.analyzers.yaml_generic]\n```\n\n### Flow 9: analyze_helm\n```\nanalyze_helm [pactfix-py.pactfix.analyzers.helm]\n```\n\n### Flow 10: analyze_html\n```\nanalyze_html [pactfix-py.pactfix.analyzers.html]\n```\n\n## Key Classes\n\n### pactfix-py.pactfix.sandbox.Sandbox\n> Docker-based sandbox for running and testing fixed code.\n- **Methods**: 9\n- **Key Methods**: pactfix-py.pactfix.sandbox.Sandbox.__init__, pactfix-py.pactfix.sandbox.Sandbox.setup, pactfix-py.pactfix.sandbox.Sandbox._generate_docker_compose, pactfix-py.pactfix.sandbox.Sandbox._generate_dockerignore, pactfix-py.pactfix.sandbox.Sandbox.copy_fixed_files, pactfix-py.pactfix.sandbox.Sandbox.build, pactfix-py.pactfix.sandbox.Sandbox.run, pactfix-py.pactfix.sandbox.Sandbox.test, pactfix-py.pactfix.sandbox.Sandbox.cleanup\n\n### server.DebugHandler\n> HTTP handler for the debug server.\n- **Methods**: 6\n- **Key Methods**: server.DebugHandler.__init__, server.DebugHandler.do_GET, server.DebugHandler.do_POST, server.DebugHandler._call_pactfix_api, server.DebugHandler.do_OPTIONS, server.DebugHandler.log_message\n- **Inherits**: SimpleHTTPRequestHandler\n\n### pactfix-py.pactfix.analyzer.AnalysisResult\n- **Methods**: 1\n- **Key Methods**: pactfix-py.pactfix.analyzer.AnalysisResult.to_dict\n\n### pactfix-py.pactfix.analyzer.Issue\n- **Methods**: 0\n\n### pactfix-py.pactfix.analyzer.Fix\n- **Methods**: 0\n\n## Data Transformation Functions\n\nKey functions that process and transform data:\n\n### examples.javascript.faulty.processUser\n- **Output to**: examples.javascript.faulty.log, examples.javascript.faulty.eval, examples.javascript.faulty.getElementById, examples.javascript.faulty.forEach\n\n### examples.javascript.fixed.processUser\n- **Output to**: examples.javascript.fixed.log, examples.javascript.fixed.eval, examples.javascript.fixed.getElementById, examples.javascript.fixed.forEach\n\n### examples.javascript.fixed.fixed_fixed.processUser\n- **Output to**: examples.javascript.fixed.fixed_fixed.log, examples.javascript.fixed.fixed_fixed.eval, examples.javascript.fixed.fixed_fixed.getElementById, examples.javascript.fixed.fixed_fixed.forEach\n\n### examples.javascript.fixed.fixed_faulty.processUser\n- **Output to**: examples.javascript.fixed.fixed_faulty.log, examples.javascript.fixed.fixed_faulty.eval, examples.javascript.fixed.fixed_faulty.getElementById, examples.javascript.fixed.fixed_faulty.forEach\n\n### examples.php.faulty.process\n- **Output to**: examples.php.faulty.foreach\n\n### examples.php.fixed.fixed_faulty.process\n- **Output to**: examples.php.fixed.fixed_faulty.foreach\n\n### examples.php.fixed.fixed_fixed.process\n- **Output to**: examples.php.fixed.fixed_fixed.foreach\n\n### examples.php.fixed.process\n- **Output to**: examples.php.fixed.foreach\n\n### examples.nodejs.faulty.processFile\n- **Output to**: examples.nodejs.faulty.readFileSync, examples.nodejs.faulty.log, examples.nodejs.faulty.eval, examples.nodejs.faulty.toString\n\n### examples.nodejs.fixed.processFile\n- **Output to**: examples.nodejs.fixed.readFileSync, examples.nodejs.fixed.log, examples.nodejs.fixed.eval, examples.nodejs.fixed.toString\n\n### examples.nodejs.fixed.fixed_faulty.processFile\n- **Output to**: examples.nodejs.fixed.fixed_faulty.readFileSync, examples.nodejs.fixed.fixed_faulty.log, examples.nodejs.fixed.fixed_faulty.eval, examples.nodejs.fixed.fixed_faulty.toString\n\n### examples.nodejs.fixed.fixed_fixed.processFile\n- **Output to**: examples.nodejs.fixed.fixed_fixed.readFileSync, examples.nodejs.fixed.fixed_fixed.log, examples.nodejs.fixed.fixed_fixed.eval, examples.nodejs.fixed.fixed_fixed.toString\n\n### examples..pactfix.fixed.javascript.fixed.processUser\n- **Output to**: examples..pactfix.fixed.javascript.fixed.log, examples..pactfix.fixed.javascript.fixed.eval, examples..pactfix.fixed.javascript.fixed.getElementById, examples..pactfix.fixed.javascript.fixed.forEach\n\n### examples..pactfix.fixed.javascript.faulty.processUser\n- **Output to**: examples..pactfix.fixed.javascript.faulty.log, examples..pactfix.fixed.javascript.faulty.eval, examples..pactfix.fixed.javascript.faulty.getElementById, examples..pactfix.fixed.javascript.faulty.forEach\n\n### examples..pactfix.fixed.nodejs.faulty.processFile\n- **Output to**: examples..pactfix.fixed.nodejs.faulty.readFileSync, examples..pactfix.fixed.nodejs.faulty.log, examples..pactfix.fixed.nodejs.faulty.eval, examples..pactfix.fixed.nodejs.faulty.toString\n\n### examples..pactfix.fixed.nodejs.fixed.processFile\n- **Output to**: examples..pactfix.fixed.nodejs.fixed.readFileSync, examples..pactfix.fixed.nodejs.fixed.log, examples..pactfix.fixed.nodejs.fixed.eval, examples..pactfix.fixed.nodejs.fixed.toString\n\n### output.process_data\n- **Output to**: print, print\n\n### examples.python.fixed_js.process_data\n- **Output to**: print, print\n\n### examples.python.fixed.process_data\n- **Output to**: print, print\n\n### examples..pactfix.fixed.python.faulty.process_data\n- **Output to**: print, print\n\n### examples.python.fixed.fixed_faulty.process_data\n- **Output to**: print, print\n\n### examples.python.fixed.fixed_fixed.process_data\n- **Output to**: print, print\n\n### pactfix-py.pactfix.cli.process_file\n> Process a single file.\n- **Output to**: server.analyze_code, None.strftime, server.add_fix_comments, print, print\n\n### pactfix-py.pactfix.cli.process_stdin\n> Process code from stdin.\n- **Output to**: server.analyze_code, None.strftime, sys.stdin.read, server.add_fix_comments, print\n\n### pactfix-py.pactfix.cli.process_batch\n> Process all files in a directory.\n- **Output to**: Path, files.extend, files.extend, files.extend, print\n\n## Public API Surface\n\nFunctions exposed as public API (no underscore prefix):\n\n- `pactfix-py.pactfix.analyzers.python_lang.analyze_python` - 146 calls\n- `pactfix-py.pactfix.analyzers.apache.analyze_apache` - 119 calls\n- `pactfix-py.pactfix.cli.process_project` - 110 calls\n- `pactfix-py.pactfix.analyzers.kubernetes.analyze_kubernetes` - 109 calls\n- `pactfix-py.pactfix.analyzers.terraform.analyze_terraform` - 107 calls\n- `pactfix-py.pactfix.analyzers.systemd.analyze_systemd` - 97 calls\n- `pactfix-py.pactfix.analyzers.docker_compose.analyze_docker_compose` - 96 calls\n- `pactfix-py.pactfix.analyzers.nginx.analyze_nginx` - 93 calls\n- `pactfix-py.pactfix.analyzers.yaml_generic.analyze_yaml` - 89 calls\n- `pactfix-py.pactfix.analyzers.helm.analyze_helm` - 86 calls\n- `pactfix-py.pactfix.analyzers.html.analyze_html` - 82 calls\n- `server.DebugHandler.do_POST` - 81 calls\n- `pactfix-py.pactfix.analyzers.css.analyze_css` - 69 calls\n- `pactfix-py.pactfix.analyzers.typescript.analyze_typescript` - 63 calls\n- `pactfix-py.pactfix.cli.fix_all_examples` - 61 calls\n- `pactfix-py.pactfix.analyzers.makefile.analyze_makefile` - 60 calls\n- `pactfix-py.pactfix.analyzers.ruby.analyze_ruby` - 57 calls\n- `pactfix-py.pactfix.analyzers.go.analyze_go` - 56 calls\n- `server.batch_analyze_directory` - 55 calls\n- `pactfix-py.pactfix.analyzers.java.analyze_java` - 55 calls\n- `pactfix-py.pactfix.analyzers.rust.analyze_rust` - 54 calls\n- `pactfix-py.pactfix.analyzers.csharp.analyze_csharp` - 53 calls\n- `pactfix-py.pactfix.analyzers.dockerfile.analyze_dockerfile` - 52 calls\n- `pactfix-py.pactfix.cli.process_file` - 45 calls\n- `pactfix-py.pactfix.analyzers.gitlab_ci.analyze_gitlab_ci` - 45 calls\n- `pactfix-py.pactfix.analyzers.bash.analyze_bash` - 44 calls\n- `pactfix-py.pactfix.analyzers.jenkinsfile.analyze_jenkinsfile` - 44 calls\n- `pactfix-py.pactfix.cli.process_stdin` - 43 calls\n- `pactfix-py.pactfix.analyzer.detect_language` - 43 calls\n- `pactfix-py.pactfix.analyzers.json_generic.analyze_json` - 42 calls\n- `pactfix-py.pactfix.analyzers.markpact.analyze_markpact` - 41 calls\n- `pactfix-py.pactfix.analyzers.sql.analyze_sql` - 40 calls\n- `server.analyze_dockerfile` - 39 calls\n- `server.analyze_markdown` - 38 calls\n- `server.analyze_with_builtin` - 36 calls\n- `pactfix-py.pactfix.cli.process_batch` - 34 calls\n- `pactfix-py.pactfix.analyzers.ini_generic.analyze_ini` - 34 calls\n- `pactfix-py.pactfix.analyzers.markdown.analyze_markdown` - 33 calls\n- `server.analyze_terraform` - 33 calls\n- `server.analyze_code` - 32 calls\n\n## System Interactions\n\nHow components interact:\n\n```mermaid\ngraph TD\n    analyze_python --> split\n    analyze_python --> copy\n    analyze_python --> enumerate\n    analyze_python --> AnalysisResult\n    analyze_python --> strip\n    analyze_apache --> split\n    analyze_apache --> copy\n    analyze_apache --> enumerate\n    analyze_kubernetes --> splitlines\n    analyze_kubernetes --> copy\n    analyze_kubernetes --> enumerate\n    analyze_kubernetes --> AnalysisResult\n    analyze_terraform --> splitlines\n    analyze_terraform --> copy\n    analyze_terraform --> set\n    analyze_terraform --> enumerate\n    analyze_systemd --> split\n    analyze_systemd --> copy\n    analyze_systemd --> enumerate\n    analyze_systemd --> AnalysisResult\n    analyze_systemd --> strip\n    analyze_docker_compo --> splitlines\n    analyze_docker_compo --> copy\n    analyze_docker_compo --> get\n    analyze_docker_compo --> bool\n    analyze_nginx --> splitlines\n    analyze_nginx --> copy\n    analyze_nginx --> enumerate\n    analyze_nginx --> join\n    analyze_yaml --> split\n```\n\n## Reverse Engineering Guidelines\n\n1. **Entry Points**: Start analysis from the entry points listed above\n2. **Core Logic**: Focus on classes with many methods\n3. **Data Flow**: Follow data transformation functions\n4. **Process Flows**: Use the flow diagrams for execution paths\n5. **API Surface**: Public API functions reveal the interface\n\n## Context for LLM\n\nMaintain the identified architectural patterns and public API surface when suggesting changes.", "is_subdir": false}, {"name": "calls.mmd", "rel_path": "calls.mmd", "path": "calls.mmd", "size": "6.6KB", "icon": "📈", "type": "mermaid", "type_name": "Mermaid", "content": "flowchart LR\n    subgraph pactfix_py__pactfix\n        pactfix_py__pactfix__analyzers__bash___split_bash_comment[&quot;_split_bash_comment&quot;]\n        pactfix_py__pactfix__analyzer__analyze_code[&quot;analyze_code&quot;]\n        pactfix_py__pactfix__sandbox__create_language_dockerfile[&quot;create_language_dockerfile&quot;]\n        pactfix_py__pactfix__server__analyze[&quot;analyze&quot;]\n        pactfix_py__pactfix__cli__process_project[&quot;process_project&quot;]\n        pactfix_py__pactfix__analyzers__javascript__analyze_javascript[&quot;analyze_javascript&quot;]\n        pactfix_py__pactfix__cli__process_stdin[&quot;process_stdin&quot;]\n        pactfix_py__pactfix__sandbox__detect_project_language[&quot;detect_project_language&quot;]\n        pactfix_py__pactfix__analyzer__detect_language[&quot;detect_language&quot;]\n        pactfix_py__pactfix__analyzers__bash__analyze_bash[&quot;analyze_bash&quot;]\n        pactfix_py__pactfix__cli__init_dockerfiles[&quot;init_dockerfiles&quot;]\n        pactfix_py__pactfix__analyzers__python_lang___split_python_comment[&quot;_split_python_comment&quot;]\n        pactfix_py__pactfix__sandbox__Sandbox__setup[&quot;setup&quot;]\n        pactfix_py__pactfix__sandbox__create_all_dockerfiles[&quot;create_all_dockerfiles&quot;]\n        pactfix_py__pactfix__analyzers__markdown__analyze_markdown[&quot;analyze_markdown&quot;]\n        pactfix_py__pactfix__cli__process_file[&quot;process_file&quot;]\n        pactfix_py__pactfix__analyzers__python_lang__analyze_python[&quot;analyze_python&quot;]\n        pactfix_py__pactfix__server__detect[&quot;detect&quot;]\n    end\n    subgraph pactown_js__src\n        pactown_js__src__analyzer__analyzeFile[&quot;analyzeFile&quot;]\n        pactown_js__src__analyzer__detectLanguage[&quot;detectLanguage&quot;]\n        pactown_js__src__analyzer__applyFixes[&quot;applyFixes&quot;]\n        pactown_js__src__analyzer__analyzer[&quot;analyzer&quot;]\n        pactown_js__src__analyzer__analyzeCode[&quot;analyzeCode&quot;]\n    end\n    subgraph scripts__git_commit_helper\n        scripts__git_commit_helper__categorize_file[&quot;categorize_file&quot;]\n        scripts__git_commit_helper__update_version_file[&quot;update_version_file&quot;]\n        scripts__git_commit_helper__main[&quot;main&quot;]\n        scripts__git_commit_helper__update_changelog[&quot;update_changelog&quot;]\n        scripts__git_commit_helper__bump_version[&quot;bump_version&quot;]\n        scripts__git_commit_helper__get_staged_files[&quot;get_staged_files&quot;]\n        scripts__git_commit_helper__generate_commit_message[&quot;generate_commit_message&quot;]\n        scripts__git_commit_helper__get_current_version[&quot;get_current_version&quot;]\n    end\n    subgraph server\n        server___is_path_within[&quot;_is_path_within&quot;]\n        server__batch_analyze_directory[&quot;batch_analyze_directory&quot;]\n        server__analyze_code[&quot;analyze_code&quot;]\n        server___split_bash_comment[&quot;_split_bash_comment&quot;]\n        server__analyze_with_builtin[&quot;analyze_with_builtin&quot;]\n        server__apply_brace_fixes[&quot;apply_brace_fixes&quot;]\n        server__apply_fixes[&quot;apply_fixes&quot;]\n        server___snippet_path[&quot;_snippet_path&quot;]\n        server__add_fix_comments[&quot;add_fix_comments&quot;]\n        server___brace_unbraced_bash_vars[&quot;_brace_unbraced_bash_vars&quot;]\n        server___store_snippet[&quot;_store_snippet&quot;]\n        server__run_shellcheck[&quot;run_shellcheck&quot;]\n        server__analyze_code_multi[&quot;analyze_code_multi&quot;]\n        server__detect_language[&quot;detect_language&quot;]\n        server___load_snippet[&quot;_load_snippet&quot;]\n        server__analyze_markdown[&quot;analyze_markdown&quot;]\n    end\n    subgraph server__DebugHandler\n        server__DebugHandler__do_GET[&quot;do_GET&quot;]\n    end\n    pactown_js__src__analyzer__analyzeCode --&gt; pactown_js__src__analyzer__detectLanguage\n    pactown_js__src__analyzer__analyzeCode --&gt; pactown_js__src__analyzer__analyzer\n    pactown_js__src__analyzer__analyzeCode --&gt; pactown_js__src__analyzer__applyFixes\n    pactown_js__src__analyzer__analyzeFile --&gt; pactown_js__src__analyzer__analyzeCode\n    scripts__git_commit_helper__generate_commit_message --&gt; scripts__git_commit_helper__categorize_file\n    scripts__git_commit_helper__update_changelog --&gt; scripts__git_commit_helper__categorize_file\n    scripts__git_commit_helper__main --&gt; scripts__git_commit_helper__get_staged_files\n    scripts__git_commit_helper__main --&gt; scripts__git_commit_helper__generate_commit_message\n    scripts__git_commit_helper__main --&gt; scripts__git_commit_helper__get_current_version\n    scripts__git_commit_helper__main --&gt; scripts__git_commit_helper__bump_version\n    scripts__git_commit_helper__main --&gt; scripts__git_commit_helper__update_version_file\n    scripts__git_commit_helper__main --&gt; scripts__git_commit_helper__update_changelog\n    pactfix_py__pactfix__sandbox__Sandbox__setup --&gt; pactfix_py__pactfix__sandbox__detect_project_language\n    pactfix_py__pactfix__sandbox__create_all_dockerfiles --&gt; pactfix_py__pactfix__sandbox__create_language_dockerfile\n    pactfix_py__pactfix__server__analyze --&gt; server__analyze_code\n    pactfix_py__pactfix__server__detect --&gt; server__detect_language\n    pactfix_py__pactfix__cli__process_file --&gt; server__analyze_code\n    pactfix_py__pactfix__cli__process_file --&gt; server__add_fix_comments\n    pactfix_py__pactfix__cli__process_stdin --&gt; server__analyze_code\n    pactfix_py__pactfix__cli__process_stdin --&gt; server__add_fix_comments\n    pactfix_py__pactfix__cli__init_dockerfiles --&gt; pactfix_py__pactfix__sandbox__create_all_dockerfiles\n    pactfix_py__pactfix__cli__process_project --&gt; pactfix_py__pactfix__sandbox__detect_project_language\n    pactfix_py__pactfix__analyzers__python_lang__analyze_python --&gt; pactfix_py__pactfix__analyzers__python_lang___split_python_comment\n    pactfix_py__pactfix__analyzers__markdown__analyze_markdown --&gt; server__analyze_code\n    server___load_snippet --&gt; server___snippet_path\n    server___store_snippet --&gt; server___snippet_path\n    server__apply_brace_fixes --&gt; server___split_bash_comment\n    server__apply_brace_fixes --&gt; server___brace_unbraced_bash_vars\n    server__analyze_code --&gt; server__run_shellcheck\n    server__analyze_code --&gt; server__apply_brace_fixes\n    server__analyze_code --&gt; server__add_fix_comments\n    server__analyze_code --&gt; server__apply_fixes\n    server__analyze_code --&gt; server__analyze_with_builtin\n    server__batch_analyze_directory --&gt; server___is_path_within\n    server__analyze_markdown --&gt; server__analyze_code_multi\n    server__analyze_code_multi --&gt; server__detect_language\n    server__analyze_code_multi --&gt; server__analyze_code\n    server__DebugHandler__do_GET --&gt; server___load_snippet\n    pactfix_py__pactfix__analyzers__bash__analyze_bash --&gt; pactfix_py__pactfix__analyzers__bash___split_bash_comment\n    pactfix_py__pactfix__analyzer__analyze_code --&gt; pactown_js__src__analyzer__analyzer\n    pactfix_py__pactfix__analyzer__analyze_code --&gt; pactfix_py__pactfix__analyzer__detect_language\n    pactfix_py__pactfix__analyzer__analyze_code --&gt; pactfix_py__pactfix__analyzers__javascript__analyze_javascript\n", "is_subdir": false}, {"name": "compact_flow.mmd", "rel_path": "compact_flow.mmd", "path": "compact_flow.mmd", "size": "342B", "icon": "📈", "type": "mermaid", "type_name": "Mermaid", "content": "flowchart TD\n    pactfix_py__pactfix[&quot;pactfix-py.pactfix&lt;br/&gt;75 funcs&quot;]\n    pactown_js__src[&quot;pactown-js.src&lt;br/&gt;19 funcs&quot;]\n    server[&quot;server&lt;br/&gt;31 funcs&quot;]\n    server__DebugHandler[&quot;server.DebugHandler&lt;br/&gt;6 funcs&quot;]\n    pactfix_py__pactfix ==&gt;|13| server\n    server__DebugHandler ==&gt;|6| server\n    pactfix_py__pactfix --&gt;|1| pactown_js__src\n", "is_subdir": false}, {"name": "flow.mmd", "rel_path": "flow.mmd", "path": "flow.mmd", "size": "1.1KB", "icon": "📈", "type": "mermaid", "type_name": "Mermaid", "content": "flowchart TD\n\n    %% Entry points (blue)\n    classDef entry fill:#4dabf7,stroke:#1971c2,color:#fff\n\n    subgraph Core\n        playwright__config__port[&quot;port&quot;]\n        output__process_data[&quot;process_data&quot;]\n        output__calculate_average[&quot;calculate_average&quot;]\n        e2e__app__spec__waitForAnalysisDone[&quot;waitForAnalysisDone&quot;]\n        e2e__app__spec__status[&quot;status&quot;]\n        e2e__app__spec__input[&quot;input&quot;]\n        e2e__app__spec__value[&quot;value&quot;]\n        e2e__app__spec__errorCount[&quot;errorCount&quot;]\n        e2e__app__spec__fixedCount[&quot;fixedCount&quot;]\n        e2e__app__spec__codeLines[&quot;codeLines&quot;]\n        e2e__app__spec__output[&quot;output&quot;]\n        e2e__app__spec__highlightedSpans[&quot;highlightedSpans&quot;]\n        e2e__app__spec__lineNumbers[&quot;lineNumbers&quot;]\n        e2e__app__spec__outputHtml[&quot;outputHtml&quot;]\n        e2e__app__spec__h[&quot;h&quot;]\n        ...[&quot;+111 more&quot;]\n    end\n\n    class playwright__config__port,output__process_data,output__calculate_average,e2e__app__spec__waitForAnalysisDone,e2e__app__spec__status,e2e__app__spec__input,e2e__app__spec__value,e2e__app__spec__errorCount,e2e__app__spec__fixedCount,e2e__app__spec__codeLines entry\n", "is_subdir": false}, {"name": "prompt.txt", "rel_path": "prompt.txt", "path": "prompt.txt", "size": "2.9KB", "icon": "📄", "type": "text", "type_name": "Text", "content": "You are an AI assistant helping me understand and improve a codebase.\nUse the attached/generated files as the authoritative context.\nYour goal is to refactor the project based on these files, not just summarize it.\n\nwe are in project path: .\n\nFiles for analysis:\n\nNote: project/validation.toon.yaml and project/duplication.toon.yaml are generated by external tools (vallm and redup)\n- project/analysis.toon.yaml  (Health diagnostics - complexity metrics, god modules, coupling issues, refactoring priorities) [5KB]\n- project/map.toon.yaml  (Structural map - files, sizes, imports, exports, signatures, project header) [12KB]\n- project/evolution.toon.yaml  (Refactoring queue - ranked actions by impact/effort, risks, metrics targets, history) [2KB]\n- project/project.toon.yaml  (Compact project overview - generated from project.yaml data) [2KB]\n- project/context.md  (LLM narrative - architecture summary and project context) [18KB]\n\nMissing files (not generated in this run):\n- project/README.md\n\nTask:\n- Treat this prompt as a refactoring brief: identify the highest-priority changes and prepare concrete edits.\n- Use the file set to decide whether the first pass should focus on correctness, duplication, complexity reduction, or architecture cleanup.\n- If you can safely implement the refactor, do it; otherwise give an exact file-by-file change plan and test plan.\n- Use analysis.toon.yaml to locate high-CC functions and god modules that should be split first.\n- Keep module boundaries intact and update imports/exports according to map.toon.yaml.\n- Use evolution.toon.yaml as the execution backlog and work from the top-ranked items.\n- Keep project.toon.yaml aligned with the refactored architecture.\n\nPriority Order:\nP1 — Split or simplify the highest-CC / god modules identified in analysis.toon.yaml.\nP1 — Preserve module boundaries and update imports/exports according to map.toon.yaml.\nP2 — Keep the compact project overview in project.toon.yaml aligned with the refactor.\nP2 — Execute the highest-impact items from evolution.toon.yaml in order of benefit/risk.\n\nFocus Areas for Analysis:\n1. **Code Health Analysis** - Review complexity metrics, god modules, coupling issues from analysis.toon.yaml\n2. **Structural Map** - Use map.toon.yaml to inspect imports, exports, signatures, and the project header\n3. **Refactoring Priorities** - Examine ranked refactoring actions and risk assessment from evolution.toon.yaml\n4. **Project Overview** - Review the compact project overview from project.toon.yaml\n\nAnalysis Strategy:\n- Start with analysis.toon.yaml for health metrics, then map.toon.yaml for structure and signatures\n- Review evolution.toon.yaml for action priorities and next steps\n- Compare the compact project overview in project.toon.yaml with the main analysis files\n\nConstraints:\n- Prefer minimal, incremental changes.\n- Maintain full backward compatibility.\n- Base recommendations on concrete metrics from the provided files.\n- If uncertain, ask clarifying questions.\n", "is_subdir": false}, {"name": "analysis.toon.yaml", "rel_path": "analysis.toon.yaml", "path": "analysis.toon.yaml", "size": "5.6KB", "icon": "⚙️", "type": "yaml", "type_name": "YAML", "content": "# code2llm | 48f 8951L | python:42,typescript:2,javascript:2,shell:1,java:1 | 2026-04-08\n# CC̄=13.5 | critical:50/252 | dups:0 | cycles:1\n\nHEALTH[20]:\n  🔴 CYCLE Circular dependency detected: pactown-js.src.analyzer.detectLanguage -&gt; pactown-js.src.analyzer.analyzeCode. This indicates high coupling and may lead to infinite recursion or initialization issues.\n  🟡 CC    detectLanguage CC=50 (limit:15)\n  🟡 CC    detect_project_language CC=17 (limit:15)\n  🟡 CC    analyze_docker_compose CC=52 (limit:15)\n  🟡 CC    process_file CC=19 (limit:15)\n  🟡 CC    process_stdin CC=19 (limit:15)\n  🟡 CC    fix_all_examples CC=21 (limit:15)\n  🟡 CC    process_project CC=37 (limit:15)\n  🟡 CC    analyze_rust CC=32 (limit:15)\n  🟡 CC    analyze_ruby CC=28 (limit:15)\n  🟡 CC    analyze_ini CC=15 (limit:15)\n  🟡 CC    analyze_python CC=57 (limit:15)\n  🟡 CC    analyze_go CC=37 (limit:15)\n  🟡 CC    analyze_kubernetes CC=61 (limit:15)\n  🟡 CC    _find_container_key_line_by_index CC=19 (limit:15)\n  🟡 CC    analyze_html CC=60 (limit:15)\n  🟡 CC    _brace_unbraced_bash_vars CC=16 (limit:15)\n  🟡 CC    analyze_with_builtin CC=19 (limit:15)\n  🟡 CC    apply_fixes CC=16 (limit:15)\n  🟡 CC    analyze_code CC=19 (limit:15)\n\nREFACTOR[2]:\n  1. split 19 high-CC methods  (CC&gt;15)\n  2. break 1 circular dependencies\n\nPIPELINES[156]:\n  [1] Src [port]: port\n      PURITY: 100% pure\n  [2] Src [userAge]: userAge\n      PURITY: 100% pure\n  [3] Src [processUser]: processUser\n      PURITY: 100% pure\n  [4] Src [result]: result\n      PURITY: 100% pure\n  [5] Src [callback]: callback\n      PURITY: 100% pure\n\nLAYERS:\n  pactfix-py/                     CC̄=19.5   ←in:0  →out:0\n  │ !! cli                        645L  0C    8m  CC=37     ←0\n  │ !! sandbox                    578L  1C   12m  CC=17     ←1\n  │ !! analyzer                   482L  3C    5m  CC=119    ←0\n  │ !! kubernetes                 353L  0C    6m  CC=61     ←0\n  │ !! python_lang                238L  0C    2m  CC=57     ←0\n  │ !! markpact                   223L  0C    3m  CC=29     ←0\n  │ !! terraform                  201L  0C    1m  CC=49     ←0\n  │ !! apache                     187L  0C    1m  CC=63     ←0\n  │ markdown                   174L  0C    1m  CC=8      ←0\n  │ !! html                       163L  0C    1m  CC=60     ←0\n  │ !! systemd                    157L  0C    1m  CC=47     ←0\n  │ !! nginx                      156L  0C    1m  CC=53     ←0\n  │ !! docker_compose             143L  0C    1m  CC=52     ←0\n  │ !! bash                       127L  0C    3m  CC=16     ←0\n  │ !! yaml_generic               116L  0C    1m  CC=43     ←0\n  │ server                     107L  0C    6m  CC=4      ←0\n  │ !! makefile                   106L  0C    1m  CC=44     ←0\n  │ !! helm                       105L  0C    1m  CC=34     ←0\n  │ !! css                        104L  0C    1m  CC=33     ←0\n  │ !! csharp                      97L  0C    1m  CC=41     ←0\n  │ !! ruby                        93L  0C    1m  CC=28     ←0\n  │ !! go                          91L  0C    1m  CC=37     ←0\n  │ !! typescript                  91L  0C    1m  CC=31     ←0\n  │ !! java                        91L  0C    1m  CC=39     ←0\n  │ !! rust                        90L  0C    1m  CC=32     ←0\n  │ json_generic                87L  0C    3m  CC=14     ←0\n  │ !! dockerfile                  74L  0C    1m  CC=30     ←0\n  │ __init__                    69L  0C    0m  CC=0.0    ←0\n  │ !! jenkinsfile                 66L  0C    1m  CC=19     ←0\n  │ !! gitlab_ci                   62L  0C    1m  CC=18     ←0\n  │ !! ini_generic                 59L  0C    1m  CC=15     ←0\n  │ !! sql                         53L  0C    1m  CC=19     ←0\n  │ toml_generic                51L  0C    1m  CC=9      ←0\n  │ javascript                  41L  0C    1m  CC=10     ←1\n  │ github_actions              35L  0C    1m  CC=12     ←0\n  │ php                         34L  0C    1m  CC=13     ←0\n  │ ansible                     29L  0C    1m  CC=11     ←0\n  │ __init__                    12L  0C    0m  CC=0.0    ←0\n  │ __main__                     8L  0C    0m  CC=0.0    ←0\n  │ Dockerfile.java              6L  0C    0m  CC=0.0    ←0\n  │\n  ./                              CC̄=13.2   ←in:0  →out:0\n  │ !! server                    2166L  1C   37m  CC=64     ←4\n  │ playwright.config.ts        38L  0C    1m  CC=3      ←0\n  │ project.sh                  35L  0C    0m  CC=0.0    ←0\n  │ output                      29L  0C    2m  CC=4      ←0\n  │\n  pactown-js/                     CC̄=6.5    ←in:0  →out:0\n  │ !! analyzer.js                307L  0C   19m  CC=50     ←1\n  │ index.js                     5L  0C    0m  CC=0.0    ←0\n  │\n  scripts/                        CC̄=3.8    ←in:0  →out:0\n  │ git_commit_helper          120L  0C    8m  CC=9      ←0\n  │\n  e2e/                            CC̄=1.1    ←in:0  →out:0\n  │ !! app.spec.ts                647L  0C   18m  CC=2      ←0\n  │\n\nCOUPLING:\n                      pactfix-py.pactfix              server      pactown-js.src\n  pactfix-py.pactfix                  ──                  13                   1  !! fan-out\n              server                 ←13                  ──                      hub\n      pactown-js.src                  ←1                                      ──\n  CYCLES: 1\n  HUB: server/ (fan-in=13)\n  SMELL: pactfix-py.pactfix/ fan-out=14 → split needed\n\nEXTERNAL:\n  validation: run `vallm batch .` → validation.toon\n  duplication: run `redup scan .` → duplication.toon\n", "is_subdir": false}, {"name": "evolution.toon.yaml", "rel_path": "evolution.toon.yaml", "path": "evolution.toon.yaml", "size": "2.7KB", "icon": "⚙️", "type": "yaml", "type_name": "YAML", "content": "# code2llm/evolution | 152 func | 41f | 2026-04-08\n\nNEXT[10] (ranked by impact):\n  [1] !! SPLIT           server.py\n      WHY: 2166L, 1 classes, max CC=64\n      EFFORT: ~4h  IMPACT: 138624\n\n  [2] !! SPLIT           pactfix-py/pactfix/cli.py\n      WHY: 645L, 0 classes, max CC=37\n      EFFORT: ~4h  IMPACT: 23865\n\n  [3] !! SPLIT           pactfix-py/pactfix/sandbox.py\n      WHY: 578L, 1 classes, max CC=17\n      EFFORT: ~4h  IMPACT: 9826\n\n  [4] !! SPLIT-FUNC      analyze_python  CC=57  fan=46\n      WHY: CC=57 exceeds 15\n      EFFORT: ~1h  IMPACT: 2622\n\n  [5] !! SPLIT-FUNC      detect_language  CC=119  fan=21\n      WHY: CC=119 exceeds 15\n      EFFORT: ~1h  IMPACT: 2499\n\n  [6] !! SPLIT-FUNC      analyze_kubernetes  CC=61  fan=38\n      WHY: CC=61 exceeds 15\n      EFFORT: ~1h  IMPACT: 2318\n\n  [7] !! SPLIT-FUNC      analyze_apache  CC=63  fan=31\n      WHY: CC=63 exceeds 15\n      EFFORT: ~1h  IMPACT: 1953\n\n  [8] !! SPLIT-FUNC      analyze_terraform  CC=49  fan=38\n      WHY: CC=49 exceeds 15\n      EFFORT: ~1h  IMPACT: 1862\n\n  [9] !! SPLIT-FUNC      analyze_docker_compose  CC=52  fan=35\n      WHY: CC=52 exceeds 15\n      EFFORT: ~1h  IMPACT: 1820\n\n  [10] !! SPLIT-FUNC      analyze_yaml  CC=43  fan=35\n      WHY: CC=43 exceeds 15\n      EFFORT: ~1h  IMPACT: 1505\n\n\nRISKS[3]:\n  ⚠ Splitting server.py may break 37 import paths\n  ⚠ Splitting pactfix-py/pactfix/cli.py may break 8 import paths\n  ⚠ Splitting pactfix-py/pactfix/sandbox.py may break 12 import paths\n\nMETRICS-TARGET:\n  CC̄:          14.0 → ≤5.0\n  max-CC:      119 → ≤20\n  god-modules: 3 → 0\n  high-CC(≥15): 50 → ≤25\n  hub-types:   0 → ≤0\n\nPATTERNS (language parser shared logic):\n  _extract_declarations() in base.py — unified extraction for:\n    - TypeScript: interfaces, types, classes, functions, arrow funcs\n    - PHP: namespaces, traits, classes, functions, includes\n    - Ruby: modules, classes, methods, requires\n    - C++: classes, structs, functions, #includes\n    - C#: classes, interfaces, methods, usings\n    - Java: classes, interfaces, methods, imports\n    - Go: packages, functions, structs\n    - Rust: modules, functions, traits, use statements\n\n  Shared regex patterns per language:\n    - import: language-specific import/require/using patterns\n    - class: class/struct/trait declarations with inheritance\n    - function: function/method signatures with visibility\n    - brace_tracking: for C-family languages ({ })\n    - end_keyword_tracking: for Ruby (module/class/def...end)\n\n  Benefits:\n    - Consistent extraction logic across all languages\n    - Reduced code duplication (~70% reduction in parser LOC)\n    - Easier maintenance: fix once, apply everywhere\n    - Standardized FunctionInfo/ClassInfo models\n\nHISTORY:\n  (first run — no previous data)\n", "is_subdir": false}, {"name": "map.toon.yaml", "rel_path": "map.toon.yaml", "path": "map.toon.yaml", "size": "12.4KB", "icon": "⚙️", "type": "yaml", "type_name": "YAML", "content": "# pactfix | 48f 8951L | python:42,shell:1,typescript:2,javascript:2,java:1 | 2026-04-08\n# stats: 160 func | 0 cls | 48 mod | CC̄=13.5 | critical:50 | cycles:0\n# alerts[5]: CC detect_language=119; CC detect_language=64; CC analyze_apache=63; CC analyze_kubernetes=61; CC analyze_html=60\n# hotspots[5]: analyze_python fan=46; analyze_kubernetes fan=38; analyze_terraform fan=38; analyze_docker_compose fan=35; process_project fan=35\n# evolution: baseline\n# Keys: M=modules, D=details, i=imports, e=exports, c=classes, f=functions, m=methods\nM[48]:\n  e2e/app.spec.ts,647\n  output.py,29\n  pactfix-py/dockerfiles/Dockerfile.java,6\n  pactfix-py/pactfix/__init__.py,12\n  pactfix-py/pactfix/__main__.py,8\n  pactfix-py/pactfix/analyzer.py,482\n  pactfix-py/pactfix/analyzers/__init__.py,69\n  pactfix-py/pactfix/analyzers/ansible.py,29\n  pactfix-py/pactfix/analyzers/apache.py,187\n  pactfix-py/pactfix/analyzers/bash.py,127\n  pactfix-py/pactfix/analyzers/csharp.py,97\n  pactfix-py/pactfix/analyzers/css.py,104\n  pactfix-py/pactfix/analyzers/docker_compose.py,143\n  pactfix-py/pactfix/analyzers/dockerfile.py,74\n  pactfix-py/pactfix/analyzers/github_actions.py,35\n  pactfix-py/pactfix/analyzers/gitlab_ci.py,62\n  pactfix-py/pactfix/analyzers/go.py,91\n  pactfix-py/pactfix/analyzers/helm.py,105\n  pactfix-py/pactfix/analyzers/html.py,163\n  pactfix-py/pactfix/analyzers/ini_generic.py,59\n  pactfix-py/pactfix/analyzers/java.py,91\n  pactfix-py/pactfix/analyzers/javascript.py,41\n  pactfix-py/pactfix/analyzers/jenkinsfile.py,66\n  pactfix-py/pactfix/analyzers/json_generic.py,87\n  pactfix-py/pactfix/analyzers/kubernetes.py,353\n  pactfix-py/pactfix/analyzers/makefile.py,106\n  pactfix-py/pactfix/analyzers/markdown.py,174\n  pactfix-py/pactfix/analyzers/markpact.py,223\n  pactfix-py/pactfix/analyzers/nginx.py,156\n  pactfix-py/pactfix/analyzers/php.py,34\n  pactfix-py/pactfix/analyzers/python_lang.py,238\n  pactfix-py/pactfix/analyzers/ruby.py,93\n  pactfix-py/pactfix/analyzers/rust.py,90\n  pactfix-py/pactfix/analyzers/sql.py,53\n  pactfix-py/pactfix/analyzers/systemd.py,157\n  pactfix-py/pactfix/analyzers/terraform.py,201\n  pactfix-py/pactfix/analyzers/toml_generic.py,51\n  pactfix-py/pactfix/analyzers/typescript.py,91\n  pactfix-py/pactfix/analyzers/yaml_generic.py,116\n  pactfix-py/pactfix/cli.py,645\n  pactfix-py/pactfix/sandbox.py,578\n  pactfix-py/pactfix/server.py,107\n  pactown-js/src/index.js,5\n  pactown-js/src/analyzer.js,307\n  playwright.config.ts,38\n  project.sh,35\n  scripts/git_commit_helper.py,120\n  server.py,2166\nD:\n  pactfix-py/pactfix/analyzer.py:\n    e: Issue,Fix,AnalysisResult,detect_language,add_fix_comments,_apply_edits_to_lines,analyze_code\n    Issue:\n    Fix:\n    AnalysisResult: to_dict(0)\n    detect_language(code;filename)\n    add_fix_comments(result)\n    _apply_edits_to_lines(lines;edits)\n    analyze_code(code;filename;force_language)\n  server.py:\n    e: DebugHandler,_snippet_id_for,_snippet_path,_load_snippet,_store_snippet,_split_bash_comment,_brace_unbraced_bash_vars,apply_brace_fixes,run_shellcheck,analyze_with_builtin,apply_fixes,analyze_code,add_fix_comments,_is_path_within,_read_text_file,batch_analyze_directory,analyze_python_code,analyze_php_code,analyze_javascript_code,analyze_dockerfile,analyze_docker_compose,analyze_sql,analyze_terraform,analyze_kubernetes,analyze_nginx_config,analyze_github_actions,analyze_ansible,analyze_markdown,detect_language,analyze_code_multi,add_fix_comments_lang,main\n    DebugHandler(SimpleHTTPRequestHandler): __init__(0),do_GET(0),do_POST(0),_call_pactfix_api(1),do_OPTIONS(0),log_message(1)  # HTTP handler for the debug server...\n    _snippet_id_for(code;mode)\n    _snippet_path(snippet_id)\n    _load_snippet(snippet_id)\n    _store_snippet(snippet_id;snippet)\n    _split_bash_comment(line)\n    _brace_unbraced_bash_vars(line)\n    apply_brace_fixes(code)\n    run_shellcheck(code)\n    analyze_with_builtin(code)\n    apply_fixes(code;issues)\n    analyze_code(code)\n    add_fix_comments(code;fixes)\n    _is_path_within(base;target)\n    _read_text_file(path;max_bytes)\n    batch_analyze_directory(root;max_files;max_bytes;include_hidden;include_details;workers)\n    analyze_python_code(code)\n    analyze_php_code(code)\n    analyze_javascript_code(code)\n    analyze_dockerfile(code)\n    analyze_docker_compose(code)\n    analyze_sql(code)\n    analyze_terraform(code)\n    analyze_kubernetes(code)\n    analyze_nginx_config(code)\n    analyze_github_actions(code)\n    analyze_ansible(code)\n    analyze_markdown(code)\n    detect_language(code;filename)\n    analyze_code_multi(code;force_language;filename)\n    add_fix_comments_lang(code;fixes;comment_char)\n    main()\n  pactfix-py/pactfix/analyzers/apache.py:\n    e: analyze_apache\n    analyze_apache(code)\n  pactfix-py/pactfix/analyzers/kubernetes.py:\n    e: analyze_kubernetes,_find_container_key_line_by_index,_find_container_line,_get_line_indent,_find_insert_position,_suggest_image_tag\n    analyze_kubernetes(code)\n    _find_container_key_line_by_index(lines;container_index;key)\n    _find_container_line(lines;container_name;key)\n    _get_line_indent(line)\n    _find_insert_position(lines;start_line;container_name)\n    _suggest_image_tag(image)\n  pactfix-py/pactfix/analyzers/html.py:\n    e: analyze_html\n    analyze_html(code)\n  pactfix-py/pactfix/analyzers/python_lang.py:\n    e: _split_python_comment,analyze_python\n    _split_python_comment(line)\n    analyze_python(code)\n  pactfix-py/pactfix/analyzers/nginx.py:\n    e: analyze_nginx\n    analyze_nginx(code)\n  pactfix-py/pactfix/analyzers/docker_compose.py:\n    e: analyze_docker_compose\n    analyze_docker_compose(code)\n  pactown-js/src/analyzer.js:\n    i: fs,path\n    e: detectLanguage,ext,lines,firstLine,analyzeBash,lines,lineNum,stripped,fixed,analyzePython,lines,lineNum,stripped,fixed,analyzePHP,lines,lineNum,stripped,analyzeJavaScript,lines,lineNum,fixed,applyFixes,lines,lineNum,lineNum,analyzeCode,lang,analyzer,fixedCode,analyzeFile,code,result\n    detectLanguage()\n    ext()\n    lines()\n    firstLine()\n    analyzeBash()\n    lines()\n    lineNum()\n    stripped()\n    fixed()\n    analyzePython()\n    lines()\n    lineNum()\n    stripped()\n    fixed()\n    analyzePHP()\n    lines()\n    lineNum()\n    stripped()\n    analyzeJavaScript()\n    lines()\n    lineNum()\n    fixed()\n    applyFixes()\n    lines()\n    lineNum()\n    lineNum()\n    analyzeCode()\n    lang()\n    analyzer()\n    fixedCode()\n    analyzeFile()\n    code()\n    result()\n  pactfix-py/pactfix/analyzers/terraform.py:\n    e: analyze_terraform\n    analyze_terraform(code)\n  pactfix-py/pactfix/analyzers/systemd.py:\n    e: analyze_systemd\n    analyze_systemd(code)\n  pactfix-py/pactfix/analyzers/makefile.py:\n    e: analyze_makefile\n    analyze_makefile(code)\n  pactfix-py/pactfix/analyzers/yaml_generic.py:\n    e: analyze_yaml\n    analyze_yaml(code)\n  pactfix-py/pactfix/analyzers/csharp.py:\n    e: analyze_csharp\n    analyze_csharp(code)\n  pactfix-py/pactfix/analyzers/java.py:\n    e: analyze_java\n    analyze_java(code)\n  pactfix-py/pactfix/cli.py:\n    e: main,process_file,process_stdin,process_batch,fix_all_examples,init_dockerfiles,setup_sandbox_only,process_project\n    main()\n    process_file(input_path;output_path;language;comment;log_file;verbose;as_json)\n    process_stdin(output_path;language;comment;log_file;verbose;as_json)\n    process_batch(directory;verbose)\n    fix_all_examples(verbose;comment)\n    init_dockerfiles(output_dir)\n    setup_sandbox_only(project_path;verbose)\n    process_project(project_path;comment;sandbox;run_tests;verbose)\n  pactfix-py/pactfix/analyzers/go.py:\n    e: analyze_go\n    analyze_go(code)\n  pactfix-py/pactfix/analyzers/helm.py:\n    e: analyze_helm\n    analyze_helm(code)\n  pactfix-py/pactfix/analyzers/css.py:\n    e: analyze_css\n    analyze_css(code)\n  pactfix-py/pactfix/analyzers/rust.py:\n    e: analyze_rust\n    analyze_rust(code)\n  pactfix-py/pactfix/analyzers/typescript.py:\n    e: analyze_typescript\n    analyze_typescript(code)\n  pactfix-py/pactfix/analyzers/dockerfile.py:\n    e: analyze_dockerfile\n    analyze_dockerfile(code)\n  pactfix-py/pactfix/analyzers/markpact.py:\n    e: _resolve_language,_find_block_line,analyze_markpact\n    _resolve_language(lang;kind;meta;body)\n    _find_block_line(code;match)\n    analyze_markpact(code)\n  pactfix-py/pactfix/analyzers/ruby.py:\n    e: analyze_ruby\n    analyze_ruby(code)\n  pactfix-py/pactfix/analyzers/sql.py:\n    e: analyze_sql\n    analyze_sql(code)\n  pactfix-py/pactfix/analyzers/jenkinsfile.py:\n    e: analyze_jenkinsfile\n    analyze_jenkinsfile(code)\n  pactfix-py/pactfix/analyzers/gitlab_ci.py:\n    e: analyze_gitlab_ci\n    analyze_gitlab_ci(code)\n  pactfix-py/pactfix/sandbox.py:\n    e: Sandbox,detect_project_language,create_language_dockerfile,create_all_dockerfiles\n    Sandbox: __init__(2),setup(0),_generate_docker_compose(0),_generate_dockerignore(0),copy_fixed_files(1),build(0),run(1),test(0),cleanup(0)  # Docker-based sandbox for running and testing fixed code...\n    detect_project_language(project_path)\n    create_language_dockerfile(language;output_dir)\n    create_all_dockerfiles(output_dir)\n  pactfix-py/pactfix/analyzers/bash.py:\n    e: _brace_unbraced_bash_vars,_split_bash_comment,analyze_bash\n    _brace_unbraced_bash_vars(line)\n    _split_bash_comment(line)\n    analyze_bash(code)\n  pactfix-py/pactfix/analyzers/ini_generic.py:\n    e: analyze_ini\n    analyze_ini(code)\n  pactfix-py/pactfix/analyzers/json_generic.py:\n    e: _pos_to_line_col,_load_with_duplicates,analyze_json\n    _pos_to_line_col(code;pos)\n    _load_with_duplicates(code)\n    analyze_json(code)\n  pactfix-py/pactfix/analyzers/php.py:\n    e: analyze_php\n    analyze_php(code)\n  pactfix-py/pactfix/analyzers/github_actions.py:\n    e: analyze_github_actions\n    analyze_github_actions(code)\n  pactfix-py/pactfix/analyzers/ansible.py:\n    e: analyze_ansible\n    analyze_ansible(code)\n  pactfix-py/pactfix/analyzers/javascript.py:\n    e: analyze_javascript\n    analyze_javascript(code;is_nodejs)\n  scripts/git_commit_helper.py:\n    e: get_staged_files,categorize_file,generate_commit_message,get_current_version,bump_version,update_version_file,update_changelog,main\n    get_staged_files()\n    categorize_file(filename)\n    generate_commit_message(files)\n    get_current_version()\n    bump_version(version)\n    update_version_file(new_version)\n    update_changelog(version;files)\n    main()\n  pactfix-py/pactfix/analyzers/toml_generic.py:\n    e: analyze_toml\n    analyze_toml(code)\n  pactfix-py/pactfix/analyzers/markdown.py:\n    e: analyze_markdown\n    analyze_markdown(code)\n  output.py:\n    e: process_data,calculate_average\n    process_data(items)\n    calculate_average(numbers)\n  pactfix-py/pactfix/server.py:\n    e: health,analyze,detect,languages,create_app,run_server\n    health()\n    analyze()\n    detect()\n    languages()\n    create_app()\n    run_server(host;port;debug)\n  playwright.config.ts:\n    i: @playwright/test\n    e: port\n    port()\n  e2e/app.spec.ts:\n    i: @playwright/test\n    e: waitForAnalysisDone,status,input,input,status,input,value,status,errorCount,fixedCount,codeLines,input,status,status,input,output,highlightedSpans,input,lineNumbers,outputHtml,h,hash,h,hash,input,value,status,langBadge,response,data,response,data,response,data,response,result,data,response,data,response,data,response,data,data,response,data,response,data,response,data,response,data,response,response,data,response,data,hasQuoteError,response,response,data,response,data,response,data,response,data,response,data,response,data,response,data,response,data,response,data\n    waitForAnalysisDone()\n    status()\n    input()\n    input()\n    status()\n    input()\n    value()\n    status()\n    errorCount()\n    fixedCount()\n    codeLines()\n    input()\n    status()\n    status()\n    input()\n    output()\n    highlightedSpans()\n    input()\n    lineNumbers()\n    outputHtml()\n    h()\n    hash()\n    h()\n    hash()\n    input()\n    value()\n    status()\n    langBadge()\n    response()\n    data()\n    response()\n    data()\n    response()\n    data()\n    response()\n    result()\n    data()\n    response()\n    data()\n    response()\n    data()\n    response()\n    data()\n    data()\n    response()\n    data()\n    response()\n    data()\n    response()\n    data()\n    response()\n    data()\n    response()\n    response()\n    data()\n    response()\n    data()\n    hasQuoteError()\n    response()\n    response()\n    data()\n    response()\n    data()\n    response()\n    data()\n    response()\n    data()\n    response()\n    data()\n    response()\n    data()\n    response()\n    data()\n    response()\n    data()\n    response()\n    data()\n  project.sh:\n  pactown-js/src/index.js:\n  pactfix-py/pactfix/__init__.py:\n  pactfix-py/pactfix/__main__.py:\n  pactfix-py/pactfix/analyzers/__init__.py:\n  pactfix-py/dockerfiles/Dockerfile.java:\n", "is_subdir": false}, {"name": "project.toon.yaml", "rel_path": "project.toon.yaml", "path": "project.toon.yaml", "size": "2.5KB", "icon": "⚙️", "type": "yaml", "type_name": "YAML", "content": "# pactfix | 160 func | 42f | 11550L | python | 2026-04-08\n\nHEALTH:\n  CC̄=13.5  critical=67 (limit:10)  dup=0  cycles=1\n\nALERTS[20]:\n  !!! cc_exceeded      detect_language = 119 (limit:15)\n  !!! cc_exceeded      detect_language = 64 (limit:15)\n  !!! cc_exceeded      analyze_apache = 63 (limit:15)\n  !!! cc_exceeded      analyze_kubernetes = 61 (limit:15)\n  !!! cc_exceeded      analyze_html = 60 (limit:15)\n  !!! cc_exceeded      analyze_python = 57 (limit:15)\n  !!! cc_exceeded      analyze_nginx = 53 (limit:15)\n  !!! cc_exceeded      analyze_docker_compose = 52 (limit:15)\n  !!! cc_exceeded      detectLanguage = 50 (limit:15)\n  !!! cc_exceeded      analyze_terraform = 49 (limit:15)\n\nMODULES[48] (top by size):\n  M[server.py] 2166L C:1 F:37 CC↑64 D:4 (python)\n  M[e2e/app.spec.ts] 647L C:0 F:18 CC↑2 D:0 (typescript)\n  M[pactfix-py/pactfix/cli.py] 645L C:0 F:8 CC↑37 D:0 (python)\n  M[pactfix-py/pactfix/sandbox.py] 578L C:1 F:12 CC↑17 D:1 (python)\n  M[pactfix-py/pactfix/analyzer.py] 482L C:3 F:5 CC↑119 D:0 (python)\n  M[pactfix-py/pactfix/analyzers/kubernetes.py] 353L C:0 F:6 CC↑61 D:0 (python)\n  M[pactown-js/src/analyzer.js] 307L C:0 F:19 CC↑50 D:1 (javascript)\n  M[pactfix-py/pactfix/analyzers/python_lang.py] 238L C:0 F:2 CC↑57 D:0 (python)\n  M[pactfix-py/pactfix/analyzers/markpact.py] 223L C:0 F:3 CC↑29 D:0 (python)\n  M[pactfix-py/pactfix/analyzers/terraform.py] 201L C:0 F:1 CC↑49 D:0 (python)\n  M[pactfix-py/pactfix/analyzers/apache.py] 187L C:0 F:1 CC↑63 D:0 (python)\n  M[pactfix-py/pactfix/analyzers/markdown.py] 174L C:0 F:1 CC↑8 D:0 (python)\n  M[pactfix-py/pactfix/analyzers/html.py] 163L C:0 F:1 CC↑60 D:0 (python)\n  M[pactfix-py/pactfix/analyzers/systemd.py] 157L C:0 F:1 CC↑47 D:0 (python)\n  M[pactfix-py/pactfix/analyzers/nginx.py] 156L C:0 F:1 CC↑53 D:0 (python)\n  LANGS: python:42/javascript:2/typescript:2/java:1/shell:1\n\nHOTSPOTS[10]:\n  ★ analyze_python fan=46  // Analysis pipeline, 46 stages\n  ★ analyze_kubernetes fan=38  // Analysis pipeline, 38 stages\n  ★ analyze_terraform fan=38  // Analysis pipeline, 38 stages\n  ★ analyze_docker_compose fan=35  // Analysis pipeline, 35 stages\n  ★ process_project fan=35  // Analysis pipeline, 35 stages\n\nREFACTOR[15]:\n  [1] H/L Split detectLanguage (CC=50 → target CC&lt;10)\n  [2] H/L Split analyze_docker_compose (CC=52 → target CC&lt;10)\n  [3] H/L Split process_project (CC=37 → target CC&lt;10)\n  [4] H/L Split analyze_rust (CC=32 → target CC&lt;10)\n  [5] H/L Split analyze_ruby (CC=28 → target CC&lt;10)\n\nEVOLUTION:\n  2026-04-08 CC̄=13.5 crit=67 11550L // Automated analysis\n", "is_subdir": false}];
+        let currentFile = null;
+
+        function renderFileList(filter = '') {
+            const list = document.getElementById('fileList');
+            const filtered = files.filter(f => 
+                f.name.toLowerCase().includes(filter.toLowerCase()) ||
+                f.path.toLowerCase().includes(filter.toLowerCase())
+            );
+            
+            if (filtered.length === 0) {
+                list.innerHTML = '<div class="empty-state">No files found</div>';
+                return;
+            }
+            
+            // Group by type
+            const groups = {};
+            for (const file of filtered) {
+                const type = file.type_name;
+                if (!groups[type]) groups[type] = [];
+                groups[type].push(file);
+            }
+            
+            let html = '';
+            for (const [typeName, groupFiles] of Object.entries(groups)) {
+                html += `
+                    <div class="file-group">
+                        <div class="file-group-title">${typeName} Files (${groupFiles.length})</div>
+                        ${groupFiles.map(f => `
+                            <div class="file-item ${currentFile?.name === f.name ? 'active' : ''}" 
+                                 onclick="selectFile('${f.name}')">
+                                <span class="file-icon">${f.icon}</span>
+                                <div class="file-info">
+                                    <div class="file-name">${f.name}</div>
+                                    <div class="file-meta">${f.path}</div>
+                                </div>
+                                <span class="file-size">${f.size}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            list.innerHTML = html;
+        }
+
+        function selectFile(name) {
+            const file = files.find(f => f.name === name);
+            if (!file) return;
+            
+            currentFile = file;
+            
+            document.getElementById('contentIcon').textContent = file.icon;
+            document.getElementById('contentTitle').textContent = file.name;
+            
+            // Actions
+            const actions = document.getElementById('contentActions');
+            actions.innerHTML = `
+                <a href="${file.rel_path}" download class="btn">⬇ Download</a>
+                <a href="${file.rel_path}" target="_blank" class="btn btn-primary">↗ Open Raw</a>
+            `;
+            
+            // Content
+            const body = document.getElementById('contentBody');
+            if (file.type === 'markdown') {
+                // Render markdown as HTML using marked.js
+                body.innerHTML = `<div class="markdown-content">${marked.parse(file.content)}</div>`;
+            } else if (file.type === 'html') {
+                // For HTML files, show in iframe for safety
+                body.innerHTML = `<iframe src="${file.rel_path}" style="width:100%;height:100%;border:none;border-radius:0.5rem;"></iframe>`;
+            } else if (file.type === 'image') {
+                // For images, display the actual image
+                body.innerHTML = `<div class="image-preview"><img src="${file.rel_path}" alt="${file.name}" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:0.5rem;"></div>`;
+            } else if (file.type === 'mermaid') {
+                // Render mermaid diagram
+                const diagramId = 'mermaid-diagram-' + Date.now();
+                body.innerHTML = `<div class="mermaid-content"><pre class="mermaid" id="${diagramId}">${file.content}</pre></div>`;
+                // Initialize mermaid on the new element
+                setTimeout(() => {
+                    mermaid.init(undefined, document.getElementById(diagramId));
+                }, 0);
+            } else if (file.type === 'json') {
+                try {
+                    const json = JSON.parse(file.content.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&'));
+                    const formatted = JSON.stringify(json, null, 2);
+                    body.innerHTML = `<pre><code class="language-json">${formatted.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>`;
+                    hljs.highlightElement(body.querySelector('code'));
+                } catch {
+                    body.innerHTML = `<pre>${file.content}</pre>`;
+                }
+            } else if (file.type === 'yaml') {
+                // YAML with syntax highlighting
+                body.innerHTML = `<pre><code class="language-yaml">${file.content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>`;
+                hljs.highlightElement(body.querySelector('code'));
+            } else if (file.type === 'toon') {
+                // TOON with simple highlighting (use ini as closest match for key: value format)
+                body.innerHTML = `<pre><code class="language-ini">${file.content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>`;
+                hljs.highlightElement(body.querySelector('code'));
+            } else if (file.type === 'code') {
+                // Code files with auto-highlighting
+                body.innerHTML = `<pre><code>${file.content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>`;
+                hljs.highlightElement(body.querySelector('code'));
+            } else {
+                body.innerHTML = `<pre>${file.content}</pre>`;
+            }
+            
+            renderFileList(document.getElementById('search').value);
+        }
+
+        function filterFiles(query) {
+            renderFileList(query);
+        }
+
+        function renderStats() {
+            const stats = {};
+            for (const f of files) {
+                stats[f.type_name] = (stats[f.type_name] || 0) + 1;
+            }
+            
+            const grid = document.getElementById('statsGrid');
+            grid.innerHTML = Object.entries(stats)
+                .sort((a, b) => b[1] - a[1])
+                .map(([type, count]) => `
+                    <div class="stat-card">
+                        <div class="stat-value">${count}</div>
+                        <div class="stat-label">${type}</div>
+                    </div>
+                `).join('');
+        }
+
+        // Initialize
+        renderStats();
+        renderFileList();
+        
+        // Select first file if available
+        if (files.length > 0) {
+            selectFile(files[0].name);
+        }
+    </script>
+</body>
+</html>

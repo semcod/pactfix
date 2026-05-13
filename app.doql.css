@@ -1,0 +1,214 @@
+app {
+  name: "pactown-debug";
+  version: "1.0.5";
+}
+
+entity[name="Users"] {
+  id: int;
+  name: string;
+}
+
+entity[name="Orders"] {
+  id: int;
+  user_id: int;
+}
+
+entity[name="Products"] {
+  id: int;
+  name: string;
+}
+
+entity[name="OrderItems"] {
+  id: int;
+  order_id: int;
+  product_id: int;
+  quantity: int;
+}
+
+workflow[name="test"] {
+  trigger: "manual";
+  step-1: depend target=test-backend;
+  step-2: depend target=test-pactfix;
+  step-3: depend target=test-frontend;
+}
+
+workflow[name="test-frontend"] {
+  trigger: "manual";
+  step-1: run cmd=npm test;
+}
+
+workflow[name="test-backend"] {
+  trigger: "manual";
+  step-1: run cmd=python3 -m py_compile server.py;
+  step-2: run cmd=python3 -m unittest discover -s tests -q;
+}
+
+workflow[name="test-pactfix"] {
+  trigger: "manual";
+  step-1: run cmd=cd $(PACTFIX_DIR) && python -c "import pytest" >/dev/null 2>&1 || python -m pip install -q -e ".[dev]";
+  step-2: run cmd=cd $(PACTFIX_DIR) && python -m pytest -q;
+}
+
+workflow[name="test-sandbox"] {
+  trigger: "manual";
+  step-1: run cmd=cd $(PACTFIX_DIR) && ./scripts/test-sandboxes.sh;
+}
+
+workflow[name="test-sandbox-tests"] {
+  trigger: "manual";
+  step-1: run cmd=cd $(PACTFIX_DIR) && ./scripts/test-sandboxes.sh --test;
+}
+
+workflow[name="build-pactfix"] {
+  trigger: "manual";
+  step-1: run cmd=cd $(PACTFIX_DIR) && python -m pip install -q --upgrade build twine;
+  step-2: run cmd=cd $(PACTFIX_DIR) && python -m build --sdist --wheel;
+}
+
+workflow[name="bump-patch"] {
+  trigger: "manual";
+  step-1: run cmd=python -c 'from pathlib import Path; import re; pyproject = Path("$(PACTFIX_DIR)") / "pyproject.toml"; content = pyproject.read_text(encoding="utf-8"); pattern = re.compile(r"^(version\s*=\s*\")(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)(\")", re.MULTILINE); match = pattern.search(content); assert match, "Could not find version in pyproject.toml"; major = int(match.group("major")); minor = int(match.group("minor")); patch = int(match.group("patch")) + 1; new_version = f"{major}.{minor}.{patch}"; updated = pattern.sub(rf"\g<1>{new_version}\g<5>", content, count=1); pyproject.write_text(updated, encoding="utf-8"); print(f"Bumped pactfix version to {new_version}")';
+}
+
+workflow[name="publish"] {
+  trigger: "manual";
+  step-1: run cmd=cd $(PACTFIX_DIR) && python -m twine upload dist/*;
+}
+
+workflow[name="push"] {
+  trigger: "manual";
+  step-1: run cmd=goal push;
+}
+
+workflow[name="build"] {
+  trigger: "manual";
+  step-1: run cmd=docker build -t pactown-debug .;
+}
+
+workflow[name="run"] {
+  trigger: "manual";
+  step-1: run cmd=if ! docker ps -q -f name=pactown-debug | grep -q .; then \;
+  step-2: run cmd=docker run -d --name pactown-debug -p $(PORT):8080 --env-file .env --rm pactown-debug; \;
+  step-3: run cmd=echo "Container started: http://localhost:$(PORT)"; \;
+  step-4: run cmd=else \;
+  step-5: run cmd=echo "Container already running: http://localhost:$(PORT)"; \;
+  step-6: run cmd=fi;
+}
+
+workflow[name="stop"] {
+  trigger: "manual";
+  step-1: run cmd=if docker ps -q -f name=pactown-debug | grep -q .; then \;
+  step-2: run cmd=docker stop pactown-debug; \;
+  step-3: run cmd=echo "Container stopped."; \;
+  step-4: run cmd=else \;
+  step-5: run cmd=echo "Container not running."; \;
+  step-6: run cmd=fi;
+}
+
+workflow[name="clean"] {
+  trigger: "manual";
+  step-1: run cmd=if docker images -q pactown-debug | grep -q .; then \;
+  step-2: run cmd=docker rmi pactown-debug; \;
+  step-3: run cmd=echo "Image removed."; \;
+  step-4: run cmd=else \;
+  step-5: run cmd=echo "Image not found."; \;
+  step-6: run cmd=fi;
+  step-7: run cmd=rm -rf dist build .pytest_cache test-results \;
+  step-8: run cmd=$(PACTFIX_DIR)/.pytest_cache $(PACTFIX_DIR)/dist $(PACTFIX_DIR)/build $(PACTFIX_DIR)/*.egg-info;
+}
+
+workflow[name="down"] {
+  trigger: "manual";
+  step-1: depend target=clean;
+}
+
+workflow[name="install"] {
+  trigger: "manual";
+  step-1: run cmd=pip install -e .[dev];
+}
+
+workflow[name="lint"] {
+  trigger: "manual";
+  step-1: run cmd=ruff check .;
+}
+
+workflow[name="fmt"] {
+  trigger: "manual";
+  step-1: run cmd=ruff format .;
+}
+
+workflow[name="up"] {
+  trigger: "manual";
+  step-1: run cmd=docker compose up -d;
+}
+
+workflow[name="logs"] {
+  trigger: "manual";
+  step-1: run cmd=docker compose logs -f;
+}
+
+workflow[name="health"] {
+  trigger: "manual";
+  step-1: run cmd=docker compose ps;
+}
+
+workflow[name="docker-build"] {
+  trigger: "manual";
+  step-1: run cmd=docker build -t pactown-debug:latest .;
+}
+
+workflow[name="help"] {
+  trigger: "manual";
+  step-1: run cmd=echo "Targets:";
+  step-2: run cmd=echo "  make test           - run all tests (frontend e2e + pactfix-py)";
+  step-3: run cmd=echo "  make test-frontend  - run Playwright e2e tests";
+  step-4: run cmd=echo "  make test-pactfix   - run pactfix-py pytest suite";
+  step-5: run cmd=echo "  make test-sandbox   - run pactfix sandbox smoke test on all test-projects";
+  step-6: run cmd=echo "  make test-sandbox-tests - run sandbox smoke test + run in-container;
+  step-7: run cmd=echo "  make test-backend   - basic python syntax check for server.py";
+  step-8: run cmd=echo "  make publish        - build + upload python package pactfix (requires;
+  step-9: run cmd=echo "  make push           - git add . + commit + push to remote";
+  step-10: run cmd=echo "  make build          - build Docker image for pactown-debug";
+  step-11: run cmd=echo "  make run            - run Docker container (builds if needed)";
+  step-12: run cmd=echo "  make stop           - stop and remove running container";
+  step-13: run cmd=echo "  make clean          - remove python build/test artifacts and Docker;
+  step-14: run cmd=echo "  make down           - stop and remove containers (alias for clean)";
+}
+
+workflow[name="ps"] {
+  trigger: "manual";
+  step-1: run cmd=docker compose ps;
+}
+
+deploy {
+  target: docker-compose;
+  compose_file: docker-compose.yml;
+}
+
+environment[name="local"] {
+  runtime: docker-compose;
+  env_file: ".env";
+}
+
+workflow[name="all"] {
+  trigger: "manual";
+  step-1: run cmd=taskfile run install;
+  step-2: run cmd=taskfile run lint;
+  step-3: run cmd=taskfile run test;
+}
+
+workflow[name="format"] {
+  trigger: "manual";
+  step-1: run cmd=ruff format .;
+}
+
+workflow[name="import-makefile-hint"] {
+  trigger: "manual";
+  step-1: run cmd=echo "Run: taskfile import Makefile to import existing targets.";
+}
+
+/* auto-added stub: define where entities are persisted */
+database[name="default"] {
+  engine: "sqlite";
+  path: "data/app.db";
+}

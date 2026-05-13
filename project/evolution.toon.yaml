@@ -1,0 +1,82 @@
+# code2llm/evolution | 152 func | 41f | 2026-04-08
+
+NEXT[10] (ranked by impact):
+  [1] !! SPLIT           server.py
+      WHY: 2166L, 1 classes, max CC=64
+      EFFORT: ~4h  IMPACT: 138624
+
+  [2] !! SPLIT           pactfix-py/pactfix/cli.py
+      WHY: 645L, 0 classes, max CC=37
+      EFFORT: ~4h  IMPACT: 23865
+
+  [3] !! SPLIT           pactfix-py/pactfix/sandbox.py
+      WHY: 578L, 1 classes, max CC=17
+      EFFORT: ~4h  IMPACT: 9826
+
+  [4] !! SPLIT-FUNC      analyze_python  CC=57  fan=46
+      WHY: CC=57 exceeds 15
+      EFFORT: ~1h  IMPACT: 2622
+
+  [5] !! SPLIT-FUNC      detect_language  CC=119  fan=21
+      WHY: CC=119 exceeds 15
+      EFFORT: ~1h  IMPACT: 2499
+
+  [6] !! SPLIT-FUNC      analyze_kubernetes  CC=61  fan=38
+      WHY: CC=61 exceeds 15
+      EFFORT: ~1h  IMPACT: 2318
+
+  [7] !! SPLIT-FUNC      analyze_apache  CC=63  fan=31
+      WHY: CC=63 exceeds 15
+      EFFORT: ~1h  IMPACT: 1953
+
+  [8] !! SPLIT-FUNC      analyze_terraform  CC=49  fan=38
+      WHY: CC=49 exceeds 15
+      EFFORT: ~1h  IMPACT: 1862
+
+  [9] !! SPLIT-FUNC      analyze_docker_compose  CC=52  fan=35
+      WHY: CC=52 exceeds 15
+      EFFORT: ~1h  IMPACT: 1820
+
+  [10] !! SPLIT-FUNC      analyze_yaml  CC=43  fan=35
+      WHY: CC=43 exceeds 15
+      EFFORT: ~1h  IMPACT: 1505
+
+
+RISKS[3]:
+  ⚠ Splitting server.py may break 37 import paths
+  ⚠ Splitting pactfix-py/pactfix/cli.py may break 8 import paths
+  ⚠ Splitting pactfix-py/pactfix/sandbox.py may break 12 import paths
+
+METRICS-TARGET:
+  CC̄:          14.0 → ≤5.0
+  max-CC:      119 → ≤20
+  god-modules: 3 → 0
+  high-CC(≥15): 50 → ≤25
+  hub-types:   0 → ≤0
+
+PATTERNS (language parser shared logic):
+  _extract_declarations() in base.py — unified extraction for:
+    - TypeScript: interfaces, types, classes, functions, arrow funcs
+    - PHP: namespaces, traits, classes, functions, includes
+    - Ruby: modules, classes, methods, requires
+    - C++: classes, structs, functions, #includes
+    - C#: classes, interfaces, methods, usings
+    - Java: classes, interfaces, methods, imports
+    - Go: packages, functions, structs
+    - Rust: modules, functions, traits, use statements
+
+  Shared regex patterns per language:
+    - import: language-specific import/require/using patterns
+    - class: class/struct/trait declarations with inheritance
+    - function: function/method signatures with visibility
+    - brace_tracking: for C-family languages ({ })
+    - end_keyword_tracking: for Ruby (module/class/def...end)
+
+  Benefits:
+    - Consistent extraction logic across all languages
+    - Reduced code duplication (~70% reduction in parser LOC)
+    - Easier maintenance: fix once, apply everywhere
+    - Standardized FunctionInfo/ClassInfo models
+
+HISTORY:
+  (first run — no previous data)

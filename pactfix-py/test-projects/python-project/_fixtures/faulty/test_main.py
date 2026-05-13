@@ -11,5 +11,5 @@ def test_literal_comparison_is_fixed():
 
     # Faulty fixture uses `is` for literal comparison; pactfix should rewrite to `==`.
     # Use a non-interned string to make this deterministic.
-    val = ''.join(['t', 'e', 's', 't'])
+    val = "".join(["t", "e", "s", "t"])
     assert main.check_value(val) is True

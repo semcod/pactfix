@@ -17,14 +17,17 @@ try:
 except Exception:
     print("Error")
 
+
 # PY003: Mutable default argument
 def process_items(items=[]):
     items.append("new")
     return items
 
+
 def create_config(settings={}):
     settings["default"] = True
     return settings
+
 
 # PY004: == None instead of is None
 def check_value(val):
@@ -33,7 +36,9 @@ def check_value(val):
     if val is not None:
         return True
 
+
 # Additional common errors:
+
 
 # Using type() for type checking instead of isinstance()
 def check_type(obj):
@@ -42,6 +47,7 @@ def check_type(obj):
     if isinstance(obj, dict):
         return "dict"
 
+
 # String formatting with % (old style)
 name = "World"
 message = "Hello %s" % name
@@ -49,8 +55,9 @@ message = "Hello %s" % name
 # Catching too broad exception
 try:
     open("file.txt")
-except Exception as e:
+except Exception:
     pass
+
 
 # Using 'is' for string/int comparison
 def compare_values(a, b):
@@ -59,11 +66,15 @@ def compare_values(a, b):
     if b == 100:
         return True
 
+
 # Global variable modification
 counter = 0
+
+
 def increment():
     global counter
     counter += 1
+
 
 # Hardcoded credentials
 PASSWORD = "secret123"
@@ -71,10 +82,7 @@ API_KEY = "sk-abcdef123456"
 DATABASE_URL = "postgres://user:password@localhost/db"
 
 # Unused imports
-import os
-import sys
-import json
-import time
+
 
 def main():
     print("Main function")

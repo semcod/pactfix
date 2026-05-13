@@ -1,0 +1,29 @@
+# redup/duplication | 2 groups | 38f 7551L | 2026-04-08
+
+SUMMARY:
+  files_scanned: 38
+  total_lines:   7551
+  dup_groups:    2
+  dup_fragments: 4
+  saved_lines:   70
+  scan_ms:       5930
+
+DUPLICATES[2] (ranked by impact):
+  [e9908fb7f2748074] ! EXAC  _brace_unbraced_bash_vars  L=47 N=2 saved=47 sim=1.00
+      pactfix-py/pactfix/analyzers/bash.py:0-46  (_brace_unbraced_bash_vars)
+      server.py:0-46  (_brace_unbraced_bash_vars)
+  [62b0b645fb3d6d93]   EXAC  _split_bash_comment  L=23 N=2 saved=23 sim=1.00
+      pactfix-py/pactfix/analyzers/bash.py:0-22  (_split_bash_comment)
+      server.py:0-22  (_split_bash_comment)
+
+REFACTOR[2] (ranked by priority):
+  [1] ◐ extract_function   → utils/_brace_unbraced_bash_vars.py
+      WHY: 2 occurrences of 47-line block across 2 files — saves 47 lines
+      FILES: pactfix-py/pactfix/analyzers/bash.py, server.py
+  [2] ○ extract_function   → utils/_split_bash_comment.py
+      WHY: 2 occurrences of 23-line block across 2 files — saves 23 lines
+      FILES: pactfix-py/pactfix/analyzers/bash.py, server.py
+
+METRICS-TARGET:
+  dup_groups:  2 → 0
+  saved_lines: 70 lines recoverable

@@ -1,0 +1,101 @@
+flowchart LR
+    subgraph pactfix_py__pactfix
+        pactfix_py__pactfix__analyzers__bash___split_bash_comment["_split_bash_comment"]
+        pactfix_py__pactfix__analyzer__analyze_code["analyze_code"]
+        pactfix_py__pactfix__sandbox__create_language_dockerfile["create_language_dockerfile"]
+        pactfix_py__pactfix__server__analyze["analyze"]
+        pactfix_py__pactfix__cli__process_project["process_project"]
+        pactfix_py__pactfix__analyzers__javascript__analyze_javascript["analyze_javascript"]
+        pactfix_py__pactfix__cli__process_stdin["process_stdin"]
+        pactfix_py__pactfix__sandbox__detect_project_language["detect_project_language"]
+        pactfix_py__pactfix__analyzer__detect_language["detect_language"]
+        pactfix_py__pactfix__analyzers__bash__analyze_bash["analyze_bash"]
+        pactfix_py__pactfix__cli__init_dockerfiles["init_dockerfiles"]
+        pactfix_py__pactfix__analyzers__python_lang___split_python_comment["_split_python_comment"]
+        pactfix_py__pactfix__sandbox__Sandbox__setup["setup"]
+        pactfix_py__pactfix__sandbox__create_all_dockerfiles["create_all_dockerfiles"]
+        pactfix_py__pactfix__analyzers__markdown__analyze_markdown["analyze_markdown"]
+        pactfix_py__pactfix__cli__process_file["process_file"]
+        pactfix_py__pactfix__analyzers__python_lang__analyze_python["analyze_python"]
+        pactfix_py__pactfix__server__detect["detect"]
+    end
+    subgraph pactown_js__src
+        pactown_js__src__analyzer__analyzeFile["analyzeFile"]
+        pactown_js__src__analyzer__detectLanguage["detectLanguage"]
+        pactown_js__src__analyzer__applyFixes["applyFixes"]
+        pactown_js__src__analyzer__analyzer["analyzer"]
+        pactown_js__src__analyzer__analyzeCode["analyzeCode"]
+    end
+    subgraph scripts__git_commit_helper
+        scripts__git_commit_helper__categorize_file["categorize_file"]
+        scripts__git_commit_helper__update_version_file["update_version_file"]
+        scripts__git_commit_helper__main["main"]
+        scripts__git_commit_helper__update_changelog["update_changelog"]
+        scripts__git_commit_helper__bump_version["bump_version"]
+        scripts__git_commit_helper__get_staged_files["get_staged_files"]
+        scripts__git_commit_helper__generate_commit_message["generate_commit_message"]
+        scripts__git_commit_helper__get_current_version["get_current_version"]
+    end
+    subgraph server
+        server___is_path_within["_is_path_within"]
+        server__batch_analyze_directory["batch_analyze_directory"]
+        server__analyze_code["analyze_code"]
+        server___split_bash_comment["_split_bash_comment"]
+        server__analyze_with_builtin["analyze_with_builtin"]
+        server__apply_brace_fixes["apply_brace_fixes"]
+        server__apply_fixes["apply_fixes"]
+        server___snippet_path["_snippet_path"]
+        server__add_fix_comments["add_fix_comments"]
+        server___brace_unbraced_bash_vars["_brace_unbraced_bash_vars"]
+        server___store_snippet["_store_snippet"]
+        server__run_shellcheck["run_shellcheck"]
+        server__analyze_code_multi["analyze_code_multi"]
+        server__detect_language["detect_language"]
+        server___load_snippet["_load_snippet"]
+        server__analyze_markdown["analyze_markdown"]
+    end
+    subgraph server__DebugHandler
+        server__DebugHandler__do_GET["do_GET"]
+    end
+    pactown_js__src__analyzer__analyzeCode --> pactown_js__src__analyzer__detectLanguage
+    pactown_js__src__analyzer__analyzeCode --> pactown_js__src__analyzer__analyzer
+    pactown_js__src__analyzer__analyzeCode --> pactown_js__src__analyzer__applyFixes
+    pactown_js__src__analyzer__analyzeFile --> pactown_js__src__analyzer__analyzeCode
+    scripts__git_commit_helper__generate_commit_message --> scripts__git_commit_helper__categorize_file
+    scripts__git_commit_helper__update_changelog --> scripts__git_commit_helper__categorize_file
+    scripts__git_commit_helper__main --> scripts__git_commit_helper__get_staged_files
+    scripts__git_commit_helper__main --> scripts__git_commit_helper__generate_commit_message
+    scripts__git_commit_helper__main --> scripts__git_commit_helper__get_current_version
+    scripts__git_commit_helper__main --> scripts__git_commit_helper__bump_version
+    scripts__git_commit_helper__main --> scripts__git_commit_helper__update_version_file
+    scripts__git_commit_helper__main --> scripts__git_commit_helper__update_changelog
+    pactfix_py__pactfix__sandbox__Sandbox__setup --> pactfix_py__pactfix__sandbox__detect_project_language
+    pactfix_py__pactfix__sandbox__create_all_dockerfiles --> pactfix_py__pactfix__sandbox__create_language_dockerfile
+    pactfix_py__pactfix__server__analyze --> server__analyze_code
+    pactfix_py__pactfix__server__detect --> server__detect_language
+    pactfix_py__pactfix__cli__process_file --> server__analyze_code
+    pactfix_py__pactfix__cli__process_file --> server__add_fix_comments
+    pactfix_py__pactfix__cli__process_stdin --> server__analyze_code
+    pactfix_py__pactfix__cli__process_stdin --> server__add_fix_comments
+    pactfix_py__pactfix__cli__init_dockerfiles --> pactfix_py__pactfix__sandbox__create_all_dockerfiles
+    pactfix_py__pactfix__cli__process_project --> pactfix_py__pactfix__sandbox__detect_project_language
+    pactfix_py__pactfix__analyzers__python_lang__analyze_python --> pactfix_py__pactfix__analyzers__python_lang___split_python_comment
+    pactfix_py__pactfix__analyzers__markdown__analyze_markdown --> server__analyze_code
+    server___load_snippet --> server___snippet_path
+    server___store_snippet --> server___snippet_path
+    server__apply_brace_fixes --> server___split_bash_comment
+    server__apply_brace_fixes --> server___brace_unbraced_bash_vars
+    server__analyze_code --> server__run_shellcheck
+    server__analyze_code --> server__apply_brace_fixes
+    server__analyze_code --> server__add_fix_comments
+    server__analyze_code --> server__apply_fixes
+    server__analyze_code --> server__analyze_with_builtin
+    server__batch_analyze_directory --> server___is_path_within
+    server__analyze_markdown --> server__analyze_code_multi
+    server__analyze_code_multi --> server__detect_language
+    server__analyze_code_multi --> server__analyze_code
+    server__DebugHandler__do_GET --> server___load_snippet
+    pactfix_py__pactfix__analyzers__bash__analyze_bash --> pactfix_py__pactfix__analyzers__bash___split_bash_comment
+    pactfix_py__pactfix__analyzer__analyze_code --> pactown_js__src__analyzer__analyzer
+    pactfix_py__pactfix__analyzer__analyze_code --> pactfix_py__pactfix__analyzer__detect_language
+    pactfix_py__pactfix__analyzer__analyze_code --> pactfix_py__pactfix__analyzers__javascript__analyze_javascript

@@ -1,0 +1,160 @@
+import re
+import os
+from typing import List, Dict, Set
+
+
+def _snippet_id_for(code: str, mode: str | None = None) -> str:
+    h = hashlib.sha256()
+    h.update((mode or '').encode('utf-8'))
+    h.update(b'\n')
+    h.update(code.encode('utf-8'))
+    return h.hexdigest()
+
+
+def _snippet_path(snippet_id: str) -> Path:
+    return SNIPPET_DIR / f"{snippet_id}.json"
+
+
+def analyze_dockerfile(code: str) -> dict:
+    """Analyze Dockerfile for common issues and best practices."""
+    errors = []
+    warnings = []
+    fixes = []
+    lines = code.split('\n')
+
+    has_user = False
+    has_healthcheck = False
+    last_cmd_line = 0
+    base_image = None
+    env_vars = set()
+    exposed_ports = set()
+
+    for i, line in enumerate(lines, 1):
+        stripped = line.strip()
+        upper_line = stripped.upper()
+
+        base_image = check_base_image(i, stripped, upper_line, warnings, base_image)
+        has_user = check_user_instruction(upper_line, has_user)
+        has_healthcheck = check_healthcheck_instruction(upper_line, has_healthcheck)
+        extract_env_vars(stripped, upper_line, env_vars)
+        extract_exposed_ports(stripped, upper_line, exposed_ports)
+        check_apt_get_usage(i, stripped, upper_line, warnings)
+        check_add_vs_copy(i, stripped, upper_line, warnings)
+        check_copy_with_chown(i, stripped, upper_line, warnings, has_user)
+        last_cmd_line = check_cmd_entrypoint_format(i, stripped, upper_line, warnings, last_cmd_line)
+        check_hardcoded_secrets(i, upper_line, errors)
+        check_workdir_path(i, stripped, upper_line, warnings)
+
+    add_context_based_warnings(has_user, has_healthcheck, base_image, warnings)
+
+    return {'errors': errors, 'warnings': warnings, 'fixes': fixes, 
+            'context': {'base_image': base_image, 'env_vars': list(env_vars), 'exposed_ports': list(exposed_ports)}}
+
+
+def check_base_image(i: int, stripped: str, upper_line: str, warnings: List[Dict], base_image: str | None) -> str | None:
+    if upper_line.startswith('FROM '):
+        base_image = stripped[5:].strip().split()[0]
+        if ':latest' in base_image or (':' not in base_image and '@' not in base_image):
+            warnings.append({
+                'line': i, 'column': 1, 'code': 'DOCKER001',
+                'message': f'Użyj konkretnego tagu zamiast :latest dla obrazu {base_image}'
+            })
+    return base_image
+
+
+def check_user_instruction(upper_line: str, has_user: bool) -> bool:
+    if upper_line.startswith('USER '):
+        return True
+    return has_user
+
+
+def check_healthcheck_instruction(upper_line: str, has_healthcheck: bool) -> bool:
+    if upper_line.startswith('HEALTHCHECK '):
+        return True
+    return has_healthcheck
+
+
+def extract_env_vars(stripped: str, upper_line: str, env_vars: Set[str]) -> None:
+    if upper_line.startswith('ENV '):
+        parts = stripped[4:].split('=')
+        if parts:
+            env_vars.add(parts[0].strip())
+
+
+def extract_exposed_ports(stripped: str, upper_line: str, exposed_ports: Set[str]) -> None:
+    if upper_line.startswith('EXPOSE '):
+        ports = stripped[7:].split()
+        exposed_ports.update(ports)
+
+
+def check_apt_get_usage(i: int, stripped: str, upper_line: str, warnings: List[Dict]) -> None:
+    if upper_line.startswith('RUN ') and 'apt-get install' in stripped:
+        if 'rm -rf /var/lib/apt/lists' not in stripped and '&&' not in stripped:
+            warnings.append({
+                'line': i, 'column': 1, 'code': 'DOCKER002',
+                'message': 'apt-get install bez czyszczenia cache - dodaj && rm -rf /var/lib/apt/lists/*'
+            })
+        if 'apt-get update' not in stripped:
+            warnings.append({
+                'line': i, 'column': 1, 'code': 'DOCKER003',
+                'message': 'apt-get install bez apt-get update w tej samej warstwie'
+            })
+
+
+def check_add_vs_copy(i: int, stripped: str, upper_line: str, warnings: List[Dict]) -> None:
+    if upper_line.startswith('ADD ') and 'http' not in stripped and '.tar' not in stripped:
+        warnings.append({
+            'line': i, 'column': 1, 'code': 'DOCKER004',
+            'message': 'Użyj COPY zamiast ADD dla lokalnych plików (ADD ma dodatkowe funkcje)'
+        })
+
+
+def check_copy_with_chown(i: int, stripped: str, upper_line: str, warnings: List[Dict], has_user: bool) -> None:
+    if upper_line.startswith('COPY ') and '--chown' not in stripped and has_user:
+        warnings.append({
+            'line': i, 'column': 1, 'code': 'DOCKER005',
+            'message': 'Rozważ użycie COPY --chown=user:group dla poprawnych uprawnień'
+        })
+
+
+def check_cmd_entrypoint_format(i: int, stripped: str, upper_line: str, warnings: List[Dict], last_cmd_line: int) -> int:
+    if upper_line.startswith('CMD ') or upper_line.startswith('ENTRYPOINT '):
+        last_cmd_line = i
+        if not stripped.endswith(']') and '[' not in stripped:
+            warnings.append({
+                'line': i, 'column': 1, 'code': 'DOCKER006',
+                'message': 'Użyj formy exec (JSON array) zamiast shell form dla CMD/ENTRYPOINT'
+            })
+    return last_cmd_line
+
+
+def check_hardcoded_secrets(i: int, upper_line: str, errors: List[Dict]) -> None:
+    secret_patterns = ['PASSWORD=', 'SECRET=', 'API_KEY=', 'TOKEN=', 'PRIVATE_KEY']
+    for pattern in secret_patterns:
+        if pattern in upper_line and 'ARG' not in upper_line:
+            errors.append({
+                'line': i, 'column': 1, 'code': 'DOCKER007',
+                'message': f'Możliwy hardcoded secret - użyj build args lub secrets'
+            })
+
+
+def check_workdir_path(i: int, stripped: str, upper_line: str, warnings: List[Dict]) -> None:
+    if upper_line.startswith('WORKDIR ') and not stripped[8:].strip().startswith('/'):
+        warnings.append({
+            'line': i, 'column': 1, 'code': 'DOCKER008',
+            'message': 'WORKDIR powinien używać ścieżki absolutnej'
+        })
+
+
+def add_context_based_warnings(has_user: bool, has_healthcheck: bool, base_image: str | None, warnings: List[Dict]) -> None:
+    if not has_user:
+        warnings.append({
+            'line': 1, 'column': 1, 'code': 'DOCKER009',
+            'message': 'Brak instrukcji USER - kontener będzie działał jako root'
+        })
+
+    if not has_healthcheck and base_image:
+        warnings.append({
+            'line': 1, 'column': 1, 'code': 'DOCKER010',
+            'message': 'Brak HEALTHCHECK - dodaj dla lepszego monitorowania kontenera'
+        })

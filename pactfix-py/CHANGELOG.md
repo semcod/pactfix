@@ -2,8 +2,6 @@
 
 All notable changes to Pactfix will be documented in this file.
 
-## [1.0.5] - 2026-01-29
-
 ### Added
 
 - **Auto-fix capabilities for Docker Compose**
@@ -51,8 +49,6 @@ All notable changes to Pactfix will be documented in this file.
 - CLI argument parsing for analyze command
 - Multi-document YAML handling in Kubernetes analyzer
 - Line number tracking for precise fix application
-
-## [1.0.0] - Previous Release
 
 ### Features
 

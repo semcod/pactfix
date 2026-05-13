@@ -1,24 +1,20 @@
 # Changelog
 
+## [Unreleased]
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## [1.0.5] - 2026-01-29
 
 ### Changed
 - Refactored Docker Compose and Kubernetes analyzers
 - Updated PYPI.md documentation
 - Code quality metrics improvements with 6 supporting modules
 
-## [1.0.4] - 2026-01-29
-
 ### Changed
 - Refactored core code architecture for better maintainability
 - Updated Playwright E2E test configuration
-
-## [1.0.3] - 2026-01-29
 
 ### Added
 - GitLab CI support with dedicated analyzer
@@ -45,8 +41,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Project structure documentation
 - Docker sandbox testing documentation
 
-## [1.0.2] - 2026-01-29
-
 ### Added
 - Real-time code analysis with debouncing
 - History tracking for all fixes
@@ -61,15 +55,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial UI responsiveness issues
 - Basic syntax highlighting
 
-## [1.0.1] - 2026-01-29
-
 ### Changed
 - Updated Makefile build targets
 - Updated pactfix sandbox module
 - Updated sandbox test scripts
 - Updated git commit helper
-
-## [1.0.0] - 2026-01-20
 
 ### Added
 - Initial release
@@ -80,8 +70,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - API endpoints for code analysis (`/api/analyze`, `/api/health`, `/api/snippet`)
 
 ---
-
-## How to Update
 
 ### From Docker
 ```bash
@@ -95,3 +83,12 @@ git pull origin main
 pip install -e pactfix-py
 python3 server.py
 ```
+
+- chore(release): perform multiple release bumps
+- refactor(core): cleaner code architecture
+- refactor(docs): add code quality metrics split across 6 supporting modules
+- refactor: introduce new DSL (refactoring with new DSL)
+- docs: document Changelog, including [1.2.0] - 2026-01-29
+- fix(core): resolve Changelog [Unreleased] entries
+- chore: update 6 files
+

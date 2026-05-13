@@ -1,13 +1,8 @@
-# TODO
-
-## Priorytety
-
 ### 🔴 Wysokie
 
 - [ ] **Refaktoryzacja `analyzer.py`** — monolityczny plik (58KB) wymaga rozbicia na mniejsze moduły
 - [ ] **Synchronizacja wersji** — VERSION, pyproject.toml i package.json powinny być spójne
 - [ ] **Testy E2E** — rozbudować testy Playwright o nowe scenariusze (analiza wielu języków)
-- [ ] **`make test`** — upewnić się, że `make test` działa dla frontend, backend i pactfix-py ✅ (done)
 - [ ] **`make publish`** — publikacja paczki Python pactfix na PyPI
 
 ### 🟡 Średnie
@@ -28,9 +23,6 @@
 
 ---
 
-## Szybki start
-
-```bash
 # Instalacja
 pip install -e pactfix-py
 
@@ -43,3 +35,13 @@ python -m pactfix examples/bash/faulty.sh -o output.sh --log-file log.json -v
 # Pipe z komentarzami
 cat examples/python/faulty.py | pactfix -o output.py --comment
 ```
+
+## Discovered
+
+- Test and document the new DSL introduced by the refactor
+- Add tests and documentation for the 6 new code-quality metrics modules
+
+
+## Done (moved to CHANGELOG)
+
+- [ ] **`make test`** — upewnić się, że `make test` działa dla frontend, backend i pactfix-py ✅ (done)

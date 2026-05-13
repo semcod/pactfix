@@ -1,9 +1,3 @@
-# Pactown Live Debug - Raport rozwoju
-
-## Wersja 1.1.0 (2026-01-28)
-
-### Nowe funkcjonalności
-
 #### 1. Wsparcie dla Python
 - **Automatyczna detekcja języka** - system rozpoznaje czy kod to Bash czy Python
 - **Analiza kodu Python** z wykrywaniem typowych błędów:
@@ -29,18 +23,6 @@
   - Historia zmian
   - API endpoints
   - Podświetlanie składni
-
-### Uruchomienie testów
-
-```bash
-# Instalacja zależności
-npm install
-
-# Uruchomienie testów
-npm test
-
-# Testy z interfejsem graficznym
-npm run test:ui
 
 # Testy w trybie headed (widoczna przeglądarka)
 npm run test:headed
