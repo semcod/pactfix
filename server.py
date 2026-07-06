@@ -1,4 +1,9 @@
+import hashlib
+from pathlib import Path
 from typing import List, Dict, Set
+
+# Directory where analyzed snippets are cached as JSON.
+SNIPPET_DIR = Path(__file__).resolve().parent / ".pactfix" / "snippets"
 
 
 def _snippet_id_for(code: str, mode: str | None = None) -> str:

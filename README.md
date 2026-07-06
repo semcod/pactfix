@@ -7,6 +7,19 @@
 [![Tests](https://img.shields.io/badge/tests-202%20passing-green.svg)](#testing)
 [![E2E](https://img.shields.io/badge/e2e-41%20tests-yellow.svg)](#testing)
 
+
+## AI Cost Tracking
+
+![PyPI](https://img.shields.io/badge/pypi-costs-blue) ![Version](https://img.shields.io/badge/version-1.0.5-blue) ![Python](https://img.shields.io/badge/python-3.9+-blue) ![License](https://img.shields.io/badge/license-Apache--2.0-green)
+![AI Cost](https://img.shields.io/badge/AI%20Cost-$2.09-orange) ![Human Time](https://img.shields.io/badge/Human%20Time-14.4h-blue) ![Model](https://img.shields.io/badge/Model-openrouter%2Fqwen%2Fqwen3--coder--next-lightgrey)
+
+- 🤖 **LLM usage:** $2.0866 (22 commits)
+- 👤 **Human dev:** ~$1444 (14.4h @ $100/h, 30min dedup)
+
+Generated on 2026-07-06 using [openrouter/qwen/qwen3-coder-next](https://openrouter.ai/qwen/qwen3-coder-next)
+
+---
+
 > Multi-language code analyzer and auto-fixer with real-time feedback and Docker sandbox testing support.
 
 ---
