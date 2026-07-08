@@ -238,3 +238,6 @@ backend/*.sqlite
 
 # Pactfix sandbox
 .pactfix/
+.code2llm_cache/
+.github/
+.taskill/
