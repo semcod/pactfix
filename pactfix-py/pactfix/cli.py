@@ -409,6 +409,9 @@ def setup_sandbox_only(project_path: str, verbose: bool = False) -> int:
     
     print(f"\n✅ Sandbox ready in: {sandbox.sandbox_dir}")
     print(f"📋 Language detected: {sandbox.language}")
+    if verbose and sandbox.sandbox_dir.exists():
+        for entry in sorted(sandbox.sandbox_dir.iterdir()):
+            print(f"   • {entry.name}")
     print(f"\nTo build and run:")
     print(f"  cd {sandbox.sandbox_dir}")
     print(f"  docker-compose up --build")
